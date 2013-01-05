@@ -1,0 +1,36 @@
+$thumbnail_padding:         6px;
+$thumbnail_margin:          12px;
+$thumbnail_border:          1px solid #DDD;
+$thumbnail_selected_color:  #08C;
+
+ul.thumbnails.image_picker_selector
+{
+  overflow:             auto;
+  list-style-image:     none;
+  list-style-position:  outside;
+  list-style-type:      none;
+  padding:              0px;
+  margin:               0px;
+
+  li
+  {
+    margin:   0px $thumbnail_margin $thumbnail_margin 0px;
+    float:    left;
+
+    .thumbnail
+    {
+      padding:  $thumbnail_padding;
+      border:   $thumbnail_border;
+
+      img
+      {
+
+      }
+    }
+
+    .thumbnail.selected 
+    { 
+      background: $thumbnail_selected_color;
+    }
+  }
+}
