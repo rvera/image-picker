@@ -1,0 +1,10 @@
+body {
+  background: #EEE; }
+  body #container {
+    background: #FFF;
+    border: 1px solid #cccccc;
+    margin: auto;
+    padding: 20px 50px 40px;
+    width: 960px; }
+    body #container h1, body #container h2 {
+      border-bottom: 1px solid #cccccc; }
