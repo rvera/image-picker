@@ -29,6 +29,10 @@
     
     <h2>What it does?</h2>
     <p class='highlight'> It turns a select element into a more user friendly interface, e.g.: </p>
+    <div class="alert">
+      <strong>Note:</strong> Select items are hidden by default when using Image Picker. 
+      They are left visible in the examples for pedagogical purposes.
+    </div>
     <div class="picker">
       <select class='image-picker show-html'>
         <option data-img-src='img/01.png' value='1'>  Page 1  </option>
@@ -63,7 +67,6 @@
 
 
     <h2>More examples</h2>
-
     <h3>Include blanks</h3>
     <p class='highlight'>
       If you want to allow blanks, just include an extra option with an empty value and 
@@ -187,7 +190,8 @@
       Example:
       <pre class="prettyprint lang-html">
         &lt;option 
-          data-img-src='http://www.example.com/image.jpg' 
+          data-img-src='http://www.example.com/image.jpg'
+          data-img-label='Just an image!'
           value='42'
         &gt;
       </pre>
@@ -199,7 +203,7 @@
   <script src="js/prettify.js" type="text/javascript"></script>
   <script src="js/jquery.masonry.min.js" type="text/javascript"></script>
   <script src="js/show_html.js" type="text/javascript"></script>
-  <script src="image-picker/image-picker.js" type="text/javascript"></script>
+  <script src="https://raw.github.com/rvera/image-picker/master/image-picker/image-picker.min.js" type="text/javascript"></script>
   <script type="text/javascript">
 
     $("select.image-picker").imagepicker({hide_select: false});
