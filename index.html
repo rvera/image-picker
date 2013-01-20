@@ -137,7 +137,7 @@
         <option data-img-src='http://placekitten.com/400/150' value='2'>Cute Kitten 2</option>
         <option data-img-src='http://placekitten.com/150/150' value='3'>Cute Kitten 3</option>
         <option data-img-src='http://placekitten.com/100/150' value='4'>Cute Kitten 4</option>
-        <option data-img-src='http://placekitten.com/450/150' value='5'>Cute Kitten 5</option>
+        <option data-img-src='http://placekitten.com/450/151' value='5'>Cute Kitten 5</option>
       </select>
     </div>
     <p class='highlight'>
@@ -209,11 +209,16 @@
   <script src="js/prettify.js" type="text/javascript"></script>
   <script src="js/jquery.masonry.min.js" type="text/javascript"></script>
   <script src="js/show_html.js" type="text/javascript"></script>
-  <script src="https://raw.github.com/rvera/image-picker/master/image-picker/image-picker.min.js" type="text/javascript"></script>
+  <script src="image-picker/image-picker.min.js" type="text/javascript"></script>
   <script type="text/javascript">
 
-    $("select.image-picker").imagepicker({hide_select: false});
-    $("select.image-picker.show-labels").imagepicker({hide_select: false, show_label: true});
+    $("select.image-picker").imagepicker({
+      hide_select:  false,
+    });
+    $("select.image-picker.show-labels").imagepicker({
+      hide_select:  false, 
+      show_label:   true,
+    });
 
     var container = $("select.image-picker.masonry").next("ul.thumbnails");
     container.imagesLoaded(function(){ 
