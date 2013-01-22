@@ -49,7 +49,7 @@ class ImagePicker
         option.unmark_as_selected()
 
   create_picker: () ->
-    @picker =  $("<ul class='thumbnails image_picker_selector'></div>")
+    @picker =  $("<ul class='thumbnails image_picker_selector'></ul>")
     @picker_options = (new ImagePickerOption(option, this, @opts) for option in @select.find("option"))
     for option in @picker_options
       continue if !option.has_image()
