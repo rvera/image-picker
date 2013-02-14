@@ -6,7 +6,7 @@
 jQuery.fn.extend({
   imagepicker: (opts = {}) ->
     this.each () ->
-      select = $(this)
+      select = jQuery(this)
       select.next("ul.image_picker_selector").remove()
       select.data "picker", new ImagePicker(this, sanitized_options(opts))
       opts.initialized() if opts.initialized?
@@ -24,11 +24,11 @@ sanitized_options = (opts) ->
   jQuery.extend(default_options, opts)
 
 both_array_are_equal = (a,b) ->
-  $(a).not(b).length == 0 && $(b).not(a).length == 0
+  jQuery(a).not(b).length == 0 && jQuery(b).not(a).length == 0
 
 class ImagePicker
   constructor: (select_element, @opts={}) ->
-    @select         = $(select_element)
+    @select         = jQuery(select_element)
     @multiple       = @select.attr("multiple") == "multiple"
     @build_and_append_picker()
 
@@ -49,7 +49,7 @@ class ImagePicker
         option.unmark_as_selected()
 
   create_picker: () ->
-    @picker =  $("<ul class='thumbnails image_picker_selector'></ul>")
+    @picker =  jQuery("<ul class='thumbnails image_picker_selector'></ul>")
     @picker_options = (new ImagePickerOption(option, this, @opts) for option in @select.find("option"))
     for option in @picker_options
       continue if !option.has_image()
@@ -85,7 +85,7 @@ class ImagePicker
 
 class ImagePickerOption
   constructor: (option_element, @picker, @opts={}) ->
-    @option = $(option_element)
+    @option = jQuery(option_element)
     @create_node()
 
   has_image: () ->
@@ -97,7 +97,7 @@ class ImagePickerOption
   is_selected: () ->
     select_value = @picker.select.val()
     if @picker.multiple
-      $.inArray(@value(), select_value) >= 0
+      jQuery.inArray(@value(), select_value) >= 0
     else
       @value() == select_value
 
@@ -122,13 +122,13 @@ class ImagePickerOption
     @opts.selected() if @opts.selected? and @is_selected()
 
   create_node: () ->
-    @node = $("<li/>")
-    image = $("<img class='image_picker_image'/>")
+    @node = jQuery("<li/>")
+    image = jQuery("<img class='image_picker_image'/>")
     image.attr("src", @option.data("img-src"))
-    thumbnail = $("<div class='thumbnail'>")
+    thumbnail = jQuery("<div class='thumbnail'>")
     thumbnail.click {option: this}, (event) ->
       event.data.option.clicked()
     thumbnail.append(image)
-    thumbnail.append($("<p/>").html(@label())) if @opts.show_label
+    thumbnail.append(jQuery("<p/>").html(@label())) if @opts.show_label
     @node.append( thumbnail )
     @node
