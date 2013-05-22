@@ -1,7 +1,18 @@
 #
 # Image Picker source
 # by Rodrigo Vera
+# added limit-functionality by Jason M. Batchelor
 #
+type = (obj) ->
+  if obj == undefined or obj == null
+    return String obj
+  classToType = new Object
+  for name in "Boolean Number String Function Array Date RegExp".split(" ")
+    classToType["[object " + name + "]"] = name.toLowerCase()
+  myClass = Object.prototype.toString.call obj
+  if myClass of classToType
+    return classToType[myClass]
+  return "object"
 
 jQuery.fn.extend({
   imagepicker: (opts = {}) ->
@@ -20,6 +31,8 @@ sanitized_options = (opts) ->
     changed:      undefined,
     clicked:      undefined,
     selected:     undefined,
+    limit:        0,
+    limit_reached:undefined,
   }
   jQuery.extend(default_options, opts)
 
@@ -30,6 +43,8 @@ class ImagePicker
   constructor: (select_element, @opts={}) ->
     @select         = jQuery(select_element)
     @multiple       = @select.attr("multiple") == "multiple"
+    @limit          = parseInt(@select.data("limit")) || @opts.limit
+    @limit_reached  = @select.data("limit-reached") || @opts.limit_reached
     @build_and_append_picker()
 
   build_and_append_picker: () ->
@@ -71,7 +86,11 @@ class ImagePicker
       if imagepicker_option.value() in @selected_values()
         imagepicker_option.option.prop("selected", false)
       else
-        imagepicker_option.option.prop("selected", true)
+        if @limit > 0 && (@selected_values().length < @limit)
+          imagepicker_option.option.prop("selected", true)
+        else
+          if type(@limit_reached) is "function"
+            @limit_reached.call();
     else
       if @has_implicit_blanks() && imagepicker_option.is_selected()
         @select.val("")
