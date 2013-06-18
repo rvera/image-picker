@@ -148,7 +148,7 @@
             if (this.selected_values().length < this.opts.limit) {
               imagepicker_option.option.prop("selected", true);
             } else if (this.opts.limit_reached != null) {
-              this.opts.limit_reached();
+              this.opts.limit_reached.call(this);
             }
           } else {
             imagepicker_option.option.prop("selected", true);
@@ -165,7 +165,7 @@
       if (!both_array_are_equal(old_values, new_values)) {
         this.select.change();
         if (this.opts.changed != null) {
-          return this.opts.changed();
+          return this.opts.changed.call(this);
         }
       }
     };
@@ -224,10 +224,10 @@
     ImagePickerOption.prototype.clicked = function() {
       this.picker.toggle(this);
       if (this.opts.clicked != null) {
-        this.opts.clicked();
+        this.opts.clicked.call(this);
       }
       if ((this.opts.selected != null) && this.is_selected()) {
-        return this.opts.selected();
+        return this.opts.selected.call(this);
       }
     };
 
