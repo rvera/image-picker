@@ -78,7 +78,7 @@ class ImagePicker
           if @selected_values().length < @opts.limit
             imagepicker_option.option.prop("selected", true)
           else if @opts.limit_reached?
-            @opts.limit_reached()
+            @opts.limit_reached.call(this.select)
         else
           imagepicker_option.option.prop("selected", true)
     else
@@ -89,7 +89,7 @@ class ImagePicker
     new_values = @selected_values()
     unless both_array_are_equal(old_values, new_values)
       @select.change()
-      @opts.changed() if @opts.changed?
+      @opts.changed.call(this.select) if @opts.changed?
 
 
 class ImagePickerOption
@@ -127,8 +127,8 @@ class ImagePickerOption
 
   clicked: () ->
     @picker.toggle(this)
-    @opts.clicked()  if @opts.clicked?
-    @opts.selected() if @opts.selected? and @is_selected()
+    @opts.clicked.call(this.picker.select)  if @opts.clicked?
+    @opts.selected.call(this.picker.select) if @opts.selected? and @is_selected()
 
   create_node: () ->
     @node = jQuery("<li/>")
