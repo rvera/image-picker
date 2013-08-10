@@ -52,12 +52,23 @@ class ImagePicker
         option.unmark_as_selected()
 
   create_picker: () ->
-    @picker =  jQuery("<ul class='thumbnails image_picker_selector'></ul>")
-    @picker_options = (new ImagePickerOption(option, this, @opts) for option in @select.find("option"))
-    for option in @picker_options
-      continue if !option.has_image()
-      @picker.append( option.node )
+    @picker         =  jQuery("<ul class='thumbnails image_picker_selector'></ul>")
+    @picker_options = []
+    @recursively_parse_option_groups(@select, @picker)
     @picker
+
+  recursively_parse_option_groups: (scoped_dom, target_container) ->
+    for option_group in scoped_dom.children("optgroup")
+      option_group = jQuery(option_group)
+      container    = jQuery("<ul></ul>")
+      container.append jQuery("<li class='group_title'>#{option_group.attr("label")}</li>")
+      target_container.append jQuery("<li>").append(container)
+      @recursively_parse_option_groups(option_group, container)
+    for option in (new ImagePickerOption(option, this, @opts) for option in scoped_dom.children("option"))
+      @picker_options.push option
+      continue if !option.has_image()
+      target_container.append option.node
+
 
   has_implicit_blanks: () ->
     (option for option in @picker_options when (option.is_blank() && !option.has_image())).length > 0
