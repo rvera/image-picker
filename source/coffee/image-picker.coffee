@@ -83,22 +83,22 @@ class ImagePicker
     old_values = @selected_values()
     if @multiple
       if imagepicker_option.value() in @selected_values()
-        imagepicker_option.option.prop("selected", false)
+        new_values = @selected_values() 
+        new_values.splice(old_values.indexOf(imagepicker_option.value()), 1)
+        @select.val []
+        @select.val new_values
       else
-        if @opts.limit?
-          if @selected_values().length < @opts.limit
-            imagepicker_option.option.prop("selected", true)
-          else if @opts.limit_reached?
+        if @opts.limit? && @selected_values().length >= @opts.limit
+          if @opts.limit_reached?
             @opts.limit_reached.call(@select)
         else
-          imagepicker_option.option.prop("selected", true)
+          @select.val @selected_values().concat imagepicker_option.value()
     else
       if @has_implicit_blanks() && imagepicker_option.is_selected()
         @select.val("")
       else
         @select.val(imagepicker_option.value())
-    new_values = @selected_values()
-    unless both_array_are_equal(old_values, new_values)
+    unless both_array_are_equal(old_values, @selected_values())
       @select.change()
       @opts.changed.call(@select) if @opts.changed?
 
