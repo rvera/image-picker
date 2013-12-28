@@ -12,6 +12,12 @@ jQuery.fn.extend({
       opts.initialized() if opts.initialized?
 })
 
+# Array.indexOf shim for <= IE 8
+Array::indexOf or= (item) ->
+  for x, i in this
+    return i if x is item
+  return -1
+
 sanitized_options = (opts) ->
   default_options = {
     hide_select:    true,
