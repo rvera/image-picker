@@ -19,6 +19,11 @@ ul.thumbnails.image_picker_selector {
     float: left; }
     ul.thumbnails.image_picker_selector li .thumbnail {
       padding: 6px;
-      border: 1px solid #dddddd; }
+      border: 1px solid #dddddd;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none; }
+      ul.thumbnails.image_picker_selector li .thumbnail img {
+        -webkit-user-drag: none; }
     ul.thumbnails.image_picker_selector li .thumbnail.selected {
       background: #0088cc; }
