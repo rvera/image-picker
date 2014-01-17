@@ -7,7 +7,7 @@ jQuery.fn.extend({
   imagepicker: (opts = {}) ->
     this.each () ->
       select = jQuery(this)
-      select.next("ul.image_picker_selector").remove()
+      select.data("picker").destroy() if select.data("picker")
       select.data "picker", new ImagePicker(this, sanitized_options(opts))
       opts.initialized() if opts.initialized?
 })
@@ -35,6 +35,10 @@ class ImagePicker
     @multiple       = @select.attr("multiple") == "multiple"
     @opts.limit     = parseInt(@select.data("limit")) if @select.data("limit")?
     @build_and_append_picker()
+
+  destroy: ->
+    @select.show()
+    @picker.remove()
 
   build_and_append_picker: () ->
     @select.hide() if @opts.hide_select
