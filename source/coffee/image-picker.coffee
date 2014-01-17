@@ -12,12 +12,6 @@ jQuery.fn.extend({
       opts.initialized() if opts.initialized?
 })
 
-# Array.indexOf shim for <= IE 8
-Array::indexOf or= (item) ->
-  for x, i in this
-    return i if x is item
-  return -1
-
 sanitized_options = (opts) ->
   default_options = {
     hide_select:    true,
@@ -89,8 +83,8 @@ class ImagePicker
     old_values = @selected_values()
     if @multiple
       if imagepicker_option.value() in @selected_values()
-        new_values = @selected_values() 
-        new_values.splice(old_values.indexOf(imagepicker_option.value()), 1)
+        new_values = @selected_values()
+        new_values.splice( jQuery.inArray(old_values, imagepicker_option.value()), 1)
         @select.val []
         @select.val new_values
       else
