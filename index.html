@@ -233,7 +233,8 @@
         </dd>
       </dl>
 
-      Additionally you can specify the following callbacks:
+      Additionally you can specify the following callbacks, all the callbacks have the scope
+      (value of the <code>this</code> variable) set to the jQuery object where the plugin was initialized.
       <dl class="dl-horizontal">
         <dt>initialized</dt>
         <dd>
@@ -242,14 +243,17 @@
         <dt>changed</dt>
         <dd>
           Default: undefined. Specify a function to be called when the picker has changed.
+          Receives the old values as the first option and the new values as the second.
         </dd>
         <dt>clicked</dt>
         <dd>
           Default: undefined. Specify a function to be called when an option has been clicked.
+          Receives the image picker options as the first arguments.
         </dd>
         <dt>selected</dt>
         <dd>
           Default: undefined. Specify a function to be called when an option has been selected.
+          Receives the image picker options as the first arguments.
         </dd>
         <dt>limit_reached</dt>
         <dd>
