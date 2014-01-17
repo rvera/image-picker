@@ -14,14 +14,15 @@ jQuery.fn.extend({
 
 sanitized_options = (opts) ->
   default_options = {
-    hide_select:    true,
-    show_label:     false,
-    initialized:    undefined,
-    changed:        undefined,
-    clicked:        undefined,
-    selected:       undefined,
-    limit:          undefined,
-    limit_reached:  undefined,
+    hide_select:      true,
+    show_label:       false,
+    listen_for_reset: true,
+    initialized:      undefined,
+    changed:          undefined,
+    clicked:          undefined,
+    selected:         undefined,
+    limit:            undefined,
+    limit_reached:    undefined,
   }
   jQuery.extend(default_options, opts)
 
@@ -37,14 +38,21 @@ class ImagePicker
 
   build_and_append_picker: () ->
     @select.hide() if @opts.hide_select
-    @select.change {picker: this}, (event) ->
-      event.data.picker.sync_picker_with_select()
+    @select.change =>
+      @sync_picker_with_select()
     @picker.remove() if @picker?
     @create_picker()
     @select.after(@picker)
     @sync_picker_with_select()
+    @listen_for_reset() if @opts.listen_for_reset
 
-  sync_picker_with_select: () ->
+  listen_for_reset: () ->
+    @select.parents("form").bind "reset", =>
+      setTimeout( =>
+        @sync_picker_with_select()
+      , 1)
+
+  sync_picker_with_select: () =>
     for option in @picker_options
       if option.is_selected()
         option.mark_as_selected()
