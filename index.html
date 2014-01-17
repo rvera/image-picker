@@ -213,19 +213,6 @@
       </select>
     </div>
 
-    <h3>Clear on reset</h3>
-    <p class='highlight'>
-      Right now, the plugin has experimental support for the uncommon "reset" event if it gets fired on a parent form. <button type="reset" value="Reset">Reset</button>
-    </p>
-    <div class="picker">
-      <select class="image-picker show-html">
-          <option data-img-src='http://placekitten.com/220/200' value='1'>Cute Kitten 1</option>
-          <option data-img-src='http://placekitten.com/180/200' value='2'>Cute Kitten 2</option>
-          <option data-img-src='http://placekitten.com/130/200' value='3'>Cute Kitten 3</option>
-          <option data-img-src='http://placekitten.com/270/200' value='4'>Cute Kitten 4</option>
-      </select>
-    </div>
-
     <h2> Documentation </h2>
 
     <h3> Image Picker Options </h3>
@@ -243,11 +230,6 @@
         <dd>
           Default: undefined. If it's a select multiple and set to any value, it'll
           cap the selectable elements at that value.
-        </dd>
-        <dt>clear_on_reset</dt>
-        <dd>
-          Default: true. If set to true, will attach a listener to reset the value when the 'reset'
-          event of the parent form gets triggered.
         </dd>
       </dl>
 
