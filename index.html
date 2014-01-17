@@ -1,5 +1,5 @@
-<!doctype html> 
-<html lang="en"> 
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Image Picker</title>
@@ -11,7 +11,7 @@
   <script src="js/prettify.js" type="text/javascript"></script>
   <script src="js/jquery.masonry.min.js" type="text/javascript"></script>
   <script src="js/show_html.js" type="text/javascript"></script>
-  <script src="image-picker/image-picker.min.js" type="text/javascript"></script>
+  <script src="image-picker/image-picker.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -20,8 +20,8 @@
 
 
     <h1>Image Picker</h1>
-    <p class='lead'> 
-      Image Picker is a simple jQuery plugin that transforms a select element 
+    <p class='lead'>
+      Image Picker is a simple jQuery plugin that transforms a select element
       into a more user friendly graphical interface.
       <br/>
       <br/>
@@ -38,11 +38,11 @@
       <li>Integrates nicely with Twitter's Bootstrap markup.</li>
     </ul>
 
-    
+
     <h2>What it does?</h2>
     <p class='highlight'> It turns a select element into a more user friendly interface, e.g.: </p>
     <div class="alert">
-      <strong>Note:</strong> Select items are hidden by default when using Image Picker. 
+      <strong>Note:</strong> Select items are hidden by default when using Image Picker.
       They are left visible in the examples for pedagogical purposes.
     </div>
     <div class="picker">
@@ -64,12 +64,12 @@
 
 
     <h2>How it works?</h2>
-    <p class='highlight'> Simply add the attribute 
+    <p class='highlight'> Simply add the attribute
       <code>data-img-src</code>
       with the url of the image you want to use as a preview, e.g: </p>
     <pre class="prettyprint lang-html">
-&lt;option 
-  data-img-src='http://www.example.com/image.jpg' 
+&lt;option
+  data-img-src='http://www.example.com/image.jpg'
   value='42'
 &gt;</pre>
     <p class='highlight'>
@@ -81,7 +81,7 @@
     <h2>More examples</h2>
     <h3>Include blanks</h3>
     <p class='highlight'>
-      If you want to allow blanks, just include an extra option with an empty value and 
+      If you want to allow blanks, just include an extra option with an empty value and
       no image data associated. Clicking a selected image will deselect it.
     </p>
     <div class="picker">
@@ -124,7 +124,7 @@
       </select>
     </div>
     <p class='highlight'>
-      You can also trigger a callback when the limit has been reached by specifying a function in 
+      You can also trigger a callback when the limit has been reached by specifying a function in
       either the initialization under the attribute <code>$("select").imagepicker({limit_reached: function(){alert('We are full')}})</code>.
     </p>
     <div class="picker">
@@ -150,7 +150,7 @@
       </select>
     </div>
     <p class='highlight'>
-      You can specify more complex labels by passing them as part of the option data in 
+      You can specify more complex labels by passing them as part of the option data in
       the attribute <code>data-img-label</code>. You can even specify HTML code.
     </p>
     <div class="picker">
@@ -164,7 +164,7 @@
 
     <h3>Uneven images</h3>
     <p class='highlight'>
-      By default, Image Picker does not resize or order your images in any way, there are better tools 
+      By default, Image Picker does not resize or order your images in any way, there are better tools
       for it if you need it. It can look great if your images are properly designed and ordered.
     </p>
     <div class="picker">
@@ -177,7 +177,7 @@
       </select>
     </div>
     <p class='highlight'>
-      Or awful if they are just some random images. Thankfully, it works great with third 
+      Or awful if they are just some random images. Thankfully, it works great with third
       party grid aligning scripts like <a href='http://masonry.desandro.com/'>Masonry</a>.
     </p>
     <div class="picker">
@@ -193,7 +193,7 @@
 
     <h3>Grouped Options</h3>
     <p class='highlight'>
-      It also works with grouped options. Each group will appear as separate nested list. 
+      It also works with grouped options. Each group will appear as separate nested list.
       You'll need to style this according to your needs.
     </p>
     <div class="picker">
@@ -212,7 +212,20 @@
         </optgroup>
       </select>
     </div>
-    
+
+    <h3>Clear on reset</h3>
+    <p class='highlight'>
+      Right now, the plugin has experimental support for the uncommon "reset" event if it gets fired on a parent form. <button type="reset" value="Reset">Reset</button>
+    </p>
+    <div class="picker">
+      <select class="image-picker show-html">
+          <option data-img-src='http://placekitten.com/220/200' value='1'>Cute Kitten 1</option>
+          <option data-img-src='http://placekitten.com/180/200' value='2'>Cute Kitten 2</option>
+          <option data-img-src='http://placekitten.com/130/200' value='3'>Cute Kitten 3</option>
+          <option data-img-src='http://placekitten.com/270/200' value='4'>Cute Kitten 4</option>
+      </select>
+    </div>
+
     <h2> Documentation </h2>
 
     <h3> Image Picker Options </h3>
@@ -223,13 +236,18 @@
         <dd>Default: true.  Wheter the original select item should be hidden or not.</dd>
         <dt>show_label</dt>
         <dd>
-          Default: false. If set to true, the text of each option will be added as 
+          Default: false. If set to true, the text of each option will be added as
           a paragraph below each image.
         </dd>
         <dt>limit</dt>
         <dd>
-          Default: undefined. If it's a select multiple and set to any value, it'll 
+          Default: undefined. If it's a select multiple and set to any value, it'll
           cap the selectable elements at that value.
+        </dd>
+        <dt>clear_on_reset</dt>
+        <dd>
+          Default: true. If set to true, will attach a listener to reset the value when the 'reset'
+          event of the parent form gets triggered.
         </dd>
       </dl>
 
@@ -292,19 +310,56 @@
         <dd>Required. The url of the image to use as a preview</dd>
         <dt>data-img-label</dt>
         <dd>
-          Optional. If <code>show_label</code> is set to true when calling 
+          Optional. If <code>show_label</code> is set to true when calling
           <code>imagepicker()</code>. Then this content will be used as a label for
-          the displayed image. This will not be escaped so you can actually put HTML 
+          the displayed image. This will not be escaped so you can actually put HTML
           here (although I wouldn't recommend it).
         </dd>
       </dl>
       Example:
       <pre class="prettyprint lang-html">
-        &lt;option 
+        &lt;option
           data-img-src='http://www.example.com/image.jpg'
           data-img-label='Just an image!'
           value='42'
         &gt;
+      </pre>
+    </p>
+
+    <h3> Interacting via Javascript </h3>
+    <p class="highlight">
+      You can also interact directly with the ImagePicker object via JS.
+      To retrieve the object just call <code>.data('picker')</code> on the jQuery element.
+      Example:
+    </p>
+    <pre class="prettyprint lang-javascript">
+      // Initialize the object
+      $("select").imagepicker();
+      // Retrieve the picker
+      $("select").data('picker');
+    </pre>
+
+    <p class="highlight">
+      Probably the two more common interactions are to either destroy the ImagePicker or to sync it
+      after modifying the selected options on the select element.
+    </p>
+    <pre class="prettyprint lang-javascript">
+      // Syncs the picker with the current selected values on the 'select' element
+      $("select").data('picker').sync_picker_with_select();
+      // Destroyes the picker and shows the original 'select' element again
+      $("select").data('picker').destroy();
+    </pre>
+
+    <p class="highlight">
+      However if you do some heavy changes to the 'select' element like adding or removing options you
+      will need to reinitialize the picker. This will destroy the old version and create a new one.
+
+      <pre class="prettyprint lang-javascript">
+        // Initialize the picker once
+        $("select").imagepicker();
+        ...
+        // We modify the select element, we need to reinitilize the picker
+        $("select").imagepicker();
       </pre>
     </p>
 
@@ -317,7 +372,7 @@
     });
 
     jQuery("select.image-picker.show-labels").imagepicker({
-      hide_select:  false, 
+      hide_select:  false,
       show_label:   true,
     });
 
@@ -327,10 +382,10 @@
     });
 
     var container = jQuery("select.image-picker.masonry").next("ul.thumbnails");
-    container.imagesLoaded(function(){ 
-      container.masonry({ 
+    container.imagesLoaded(function(){
+      container.masonry({
         itemSelector:   "li",
-      }); 
+      });
     });
 
   </script>
