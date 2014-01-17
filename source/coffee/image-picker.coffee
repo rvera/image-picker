@@ -95,10 +95,11 @@ class ImagePicker
 
   toggle: (imagepicker_option) ->
     old_values = @selected_values()
+    selected_value = imagepicker_option.value().toString()
     if @multiple
-      if imagepicker_option.value() in @selected_values()
+      if selected_value in @selected_values()
         new_values = @selected_values()
-        new_values.splice( jQuery.inArray(old_values, imagepicker_option.value()), 1)
+        new_values.splice( jQuery.inArray(selected_value, old_values), 1)
         @select.val []
         @select.val new_values
       else
@@ -106,12 +107,12 @@ class ImagePicker
           if @opts.limit_reached?
             @opts.limit_reached.call(@select)
         else
-          @select.val @selected_values().concat imagepicker_option.value()
+          @select.val @selected_values().concat selected_value
     else
       if @has_implicit_blanks() && imagepicker_option.is_selected()
         @select.val("")
       else
-        @select.val(imagepicker_option.value())
+        @select.val(selected_value)
     unless both_array_are_equal(old_values, @selected_values())
       @select.change()
       @opts.changed.call(@select) if @opts.changed?
@@ -150,7 +151,7 @@ class ImagePickerOption
     else
       @option.text()
 
-  clicked: () ->
+  clicked: () =>
     @picker.toggle(this)
     @opts.clicked.call(@picker.select)  if @opts.clicked?
     @opts.selected.call(@picker.select) if @opts.selected? and @is_selected()
