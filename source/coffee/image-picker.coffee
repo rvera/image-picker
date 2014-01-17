@@ -16,7 +16,6 @@ sanitized_options = (opts) ->
   default_options = {
     hide_select:      true,
     show_label:       false,
-    listen_for_reset: true,
     initialized:      undefined,
     changed:          undefined,
     clicked:          undefined,
@@ -40,7 +39,6 @@ class ImagePicker
     @picker.remove()
     @select.removeData "picker"
     @select.show()
-    @select.parents("form").unbind "reset" if @opts.listen_for_reset
 
   build_and_append_picker: () ->
     @select.hide() if @opts.hide_select
@@ -50,13 +48,6 @@ class ImagePicker
     @create_picker()
     @select.after(@picker)
     @sync_picker_with_select()
-    @listen_for_reset() if @opts.listen_for_reset
-
-  listen_for_reset: () ->
-    @select.parents("form").bind "reset", =>
-      setTimeout( =>
-        @sync_picker_with_select()
-      , 1)
 
   sync_picker_with_select: () =>
     for option in @picker_options
