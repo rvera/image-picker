@@ -9,7 +9,7 @@ jQuery.fn.extend({
       select = jQuery(this)
       select.data("picker").destroy() if select.data("picker")
       select.data "picker", new ImagePicker(this, sanitized_options(opts))
-      opts.initialized() if opts.initialized?
+      opts.initialized.call(select.data("picker")) if opts.initialized?
 })
 
 sanitized_options = (opts) ->
@@ -106,7 +106,7 @@ class ImagePicker
         @select.val(selected_value)
     unless both_array_are_equal(old_values, @selected_values())
       @select.change()
-      @opts.changed.call(@select) if @opts.changed?
+      @opts.changed.call(@select, old_values, @selected_values()) if @opts.changed?
 
 
 class ImagePickerOption
@@ -144,8 +144,8 @@ class ImagePickerOption
 
   clicked: () =>
     @picker.toggle(this)
-    @opts.clicked.call(@picker.select)  if @opts.clicked?
-    @opts.selected.call(@picker.select) if @opts.selected? and @is_selected()
+    @opts.clicked.call(@picker.select, this)  if @opts.clicked?
+    @opts.selected.call(@picker.select, this) if @opts.selected? and @is_selected()
 
   create_node: () ->
     @node = jQuery("<li/>")
