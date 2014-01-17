@@ -37,8 +37,10 @@ class ImagePicker
     @build_and_append_picker()
 
   destroy: ->
-    @select.show()
     @picker.remove()
+    @select.removeData "picker"
+    @select.show()
+    @select.parents("form").unbind "reset" if @opts.listen_for_reset
 
   build_and_append_picker: () ->
     @select.hide() if @opts.hide_select
