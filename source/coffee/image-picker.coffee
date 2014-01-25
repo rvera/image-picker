@@ -36,7 +36,10 @@ class ImagePicker
     @build_and_append_picker()
 
   destroy: ->
+    for option in @picker_options
+      option.destroy()
     @picker.remove()
+    @select.unbind("change")
     @select.removeData "picker"
     @select.show()
 
@@ -113,6 +116,9 @@ class ImagePickerOption
   constructor: (option_element, @picker, @opts={}) ->
     @option = jQuery(option_element)
     @create_node()
+
+  destroy: ->
+    @node.find(".thumbnail").unbind()
 
   has_image: () ->
     @option.data("img-src")?
