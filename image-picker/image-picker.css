@@ -17,13 +17,15 @@ ul.thumbnails.image_picker_selector {
   ul.thumbnails.image_picker_selector li {
     margin: 0px 12px 12px 0px;
     float: left; }
-    ul.thumbnails.image_picker_selector li .thumbnail {
+    ul.thumbnails.image_picker_selector li .thumbnail_container {
+      display: block; }
+    ul.thumbnails.image_picker_selector li .thumbnail_container .thumbnail {
       padding: 6px;
       border: 1px solid #dddddd;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none; }
-      ul.thumbnails.image_picker_selector li .thumbnail img {
+      ul.thumbnails.image_picker_selector li .thumbnail_container .thumbnail img {
         -webkit-user-drag: none; }
-    ul.thumbnails.image_picker_selector li .thumbnail.selected {
+    ul.thumbnails.image_picker_selector li .thumbnail_container .thumbnail.selected {
       background: #0088cc; }

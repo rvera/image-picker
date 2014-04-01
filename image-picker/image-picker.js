@@ -39,7 +39,10 @@
       clicked: void 0,
       selected: void 0,
       limit: void 0,
-      limit_reached: void 0
+      limit_reached: void 0,
+      pickerContainer: "<ul class='thumbnails image_picker_selector' />",
+      entryContainer: "<a href='javascript:void(0);' class='thumbnail_container' />",
+      thumbnail: "<div class='thumbnail' />"
     };
     return jQuery.extend(default_options, opts);
   };
@@ -49,11 +52,9 @@
   };
 
   ImagePicker = (function() {
-
     function ImagePicker(select_element, opts) {
       this.opts = opts != null ? opts : {};
       this.sync_picker_with_select = __bind(this.sync_picker_with_select, this);
-
       this.select = jQuery(select_element);
       this.multiple = this.select.attr("multiple") === "multiple";
       if (this.select.data("limit") != null) {
@@ -76,13 +77,14 @@
     };
 
     ImagePicker.prototype.build_and_append_picker = function() {
-      var _this = this;
       if (this.opts.hide_select) {
         this.select.hide();
       }
-      this.select.change(function() {
-        return _this.sync_picker_with_select();
-      });
+      this.select.change((function(_this) {
+        return function() {
+          return _this.sync_picker_with_select();
+        };
+      })(this));
       if (this.picker != null) {
         this.picker.remove();
       }
@@ -107,7 +109,7 @@
     };
 
     ImagePicker.prototype.create_picker = function() {
-      this.picker = jQuery("<ul class='thumbnails image_picker_selector'></ul>");
+      this.picker = jQuery(this.opts.pickerContainer);
       this.picker_options = [];
       this.recursively_parse_option_groups(this.select, this.picker);
       return this.picker;
@@ -209,12 +211,12 @@
   })();
 
   ImagePickerOption = (function() {
-
     function ImagePickerOption(option_element, picker, opts) {
       this.picker = picker;
       this.opts = opts != null ? opts : {};
+      this.moveToNext = __bind(this.moveToNext, this);
       this.clicked = __bind(this.clicked, this);
-
+      this.focus = __bind(this.focus, this);
       this.option = jQuery(option_element);
       this.create_node();
     }
@@ -261,7 +263,16 @@
       }
     };
 
+    ImagePickerOption.prototype.focus = function() {
+      var linkContainers;
+      linkContainers = this.node.children();
+      if (linkContainers.length > 0) {
+        return linkContainers[0].focus();
+      }
+    };
+
     ImagePickerOption.prototype.clicked = function() {
+      this.focus();
       this.picker.toggle(this);
       if (this.opts.clicked != null) {
         this.opts.clicked.call(this.picker.select, this);
@@ -271,12 +282,41 @@
       }
     };
 
+    ImagePickerOption.prototype.moveToNext = function(step) {
+      var posElementInSelect, posElementInSelect_New;
+      posElementInSelect = jQuery.inArray(this, this.picker.picker_options);
+      posElementInSelect_New = posElementInSelect + step;
+      if (posElementInSelect_New < 0) {
+        posElementInSelect_New = 0;
+      }
+      if (posElementInSelect_New >= this.picker.picker_options.length) {
+        posElementInSelect_New = this.picker.picker_options.length - 1;
+      }
+      return this.picker.picker_options[posElementInSelect_New].focus();
+    };
+
     ImagePickerOption.prototype.create_node = function() {
-      var image, thumbnail;
+      var image, linkcontainer, thumbnail;
       this.node = jQuery("<li/>");
       image = jQuery("<img class='image_picker_image'/>");
       image.attr("src", this.option.data("img-src"));
-      thumbnail = jQuery("<div class='thumbnail'>");
+      linkcontainer = jQuery(this.opts.entryContainer);
+      linkcontainer.keydown({
+        option: this
+      }, function(event) {
+        if (event.which === 13 || event.which === 0 || event.which === 32) {
+          event.preventDefault();
+          event.data.option.clicked();
+        } else if (event.which === 37 || event.which === 38) {
+          event.preventDefault();
+          event.data.option.moveToNext(-1);
+        } else if (event.which === 39 || event.which === 40) {
+          event.preventDefault();
+          event.data.option.moveToNext(1);
+        }
+        return true;
+      });
+      thumbnail = jQuery(this.opts.thumbnail);
       thumbnail.click({
         option: this
       }, function(event) {
@@ -285,13 +325,14 @@
       thumbnail.append(image);
       if (this.opts.show_label) {
         thumbnail.append(jQuery("<p/>").html(this.label()));
+        linkcontainer.attr("aria-label", this.label());
       }
-      this.node.append(thumbnail);
+      linkcontainer.append(thumbnail);
+      this.node.append(linkcontainer);
       return this.node;
     };
 
     return ImagePickerOption;
 
   })();
-
 }).call(this);
