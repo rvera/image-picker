@@ -161,6 +161,13 @@ class ImagePickerOption
     @opts.clicked.call(@picker.select, this)  if @opts.clicked?
     @opts.selected.call(@picker.select, this) if @opts.selected? and @is_selected()
 
+  moveToNext: (step) =>
+    posElementInSelect = jQuery.inArray(this, @picker.picker_options)
+    posElementInSelect_New = posElementInSelect + step
+    posElementInSelect_New = 0                              if posElementInSelect_New < 0
+    posElementInSelect_New = @picker.picker_options.length - 1  if posElementInSelect_New >= @picker.picker_options.length
+    @picker.picker_options[ posElementInSelect_New ].focus()
+
   create_node: () ->
     @node = jQuery("<li/>")
     image = jQuery("<img class='image_picker_image'/>")
@@ -170,6 +177,13 @@ class ImagePickerOption
       if event.which == 13 || event.which == 0 || event.which == 32
         event.preventDefault()
         event.data.option.clicked()
+      else if event.which == 37 || event.which == 38
+        event.preventDefault()
+        event.data.option.moveToNext(-1)
+      else if event.which == 39 || event.which == 40
+        event.preventDefault()
+        event.data.option.moveToNext(1)
+      return true
     thumbnail = jQuery( @opts.thumbnail )
     thumbnail.click {option: this}, (event) ->
       event.data.option.clicked()
