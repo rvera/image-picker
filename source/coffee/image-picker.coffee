@@ -161,6 +161,8 @@ class ImagePickerOption
     image = jQuery("<img class='image_picker_image'/>")
     image.attr("src", @option.data("img-src"))
     linkcontainer = jQuery( @opts.entryContainer )
+    linkcontainer.keyup {option: this}, (event) ->
+      event.data.option.clicked() if event.which == 13 || event.which == 0 || event.which == 32
     thumbnail = jQuery( @opts.thumbnail )
     thumbnail.click {option: this}, (event) ->
       event.data.option.clicked()
