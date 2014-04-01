@@ -151,7 +151,12 @@ class ImagePickerOption
     else
       @option.text()
 
+  focus: () =>
+    linkContainers = @node.children()
+    linkContainers[0].focus() if linkContainers.length > 0
+
   clicked: () =>
+    this.focus()
     @picker.toggle(this)
     @opts.clicked.call(@picker.select, this)  if @opts.clicked?
     @opts.selected.call(@picker.select, this) if @opts.selected? and @is_selected()
@@ -161,8 +166,10 @@ class ImagePickerOption
     image = jQuery("<img class='image_picker_image'/>")
     image.attr("src", @option.data("img-src"))
     linkcontainer = jQuery( @opts.entryContainer )
-    linkcontainer.keyup {option: this}, (event) ->
-      event.data.option.clicked() if event.which == 13 || event.which == 0 || event.which == 32
+    linkcontainer.keydown {option: this}, (event) ->
+      if event.which == 13 || event.which == 0 || event.which == 32
+        event.preventDefault()
+        event.data.option.clicked()
     thumbnail = jQuery( @opts.thumbnail )
     thumbnail.click {option: this}, (event) ->
       event.data.option.clicked()
