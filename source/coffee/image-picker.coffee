@@ -22,6 +22,9 @@ sanitized_options = (opts) ->
     selected:         undefined,
     limit:            undefined,
     limit_reached:    undefined,
+    pickerContainer:  "<ul class='thumbnails image_picker_selector' />",
+    entryContainer:   "<a href='javascript:void(0);' />",
+    thumbnail:       "<div class='thumbnail' />",
   }
   jQuery.extend(default_options, opts)
 
@@ -60,7 +63,7 @@ class ImagePicker
         option.unmark_as_selected()
 
   create_picker: () ->
-    @picker         =  jQuery("<ul class='thumbnails image_picker_selector'></ul>")
+    @picker         =  jQuery( @opts.pickerContainer )
     @picker_options = []
     @recursively_parse_option_groups(@select, @picker)
     @picker
@@ -157,10 +160,13 @@ class ImagePickerOption
     @node = jQuery("<li/>")
     image = jQuery("<img class='image_picker_image'/>")
     image.attr("src", @option.data("img-src"))
-    thumbnail = jQuery("<div class='thumbnail'>")
+    linkcontainer = jQuery( @opts.entryContainer )
+    thumbnail = jQuery( @opts.thumbnail )
     thumbnail.click {option: this}, (event) ->
       event.data.option.clicked()
-    thumbnail.append(image)
-    thumbnail.append(jQuery("<p/>").html(@label())) if @opts.show_label
-    @node.append( thumbnail )
+    thumbnail.append( image )
+    if @opts.show_label
+      thumbnail.append(jQuery("<p/>").html(@label()))
+    linkcontainer.append( thumbnail )
+    @node.append( linkcontainer )
     @node
