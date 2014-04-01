@@ -169,6 +169,7 @@ class ImagePickerOption
     thumbnail.append( image )
     if @opts.show_label
       thumbnail.append(jQuery("<p/>").html(@label()))
+      linkcontainer.attr("aria-label",@label())
     linkcontainer.append( thumbnail )
     @node.append( linkcontainer )
     @node
