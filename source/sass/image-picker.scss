@@ -31,23 +31,28 @@ ul.thumbnails.image_picker_selector
   {
     margin:   0px $thumbnail_margin $thumbnail_margin 0px;
     float:    left;
-
-    .thumbnail
+    
+    .thumbnail_container
     {
-      padding:  $thumbnail_padding;
-      border:   $thumbnail_border;
-      -webkit-user-select: none;
-      -moz-user-select:    none;
-      -ms-user-select:     none;
-      img
+      display: block;
+      
+      .thumbnail
       {
-        -webkit-user-drag: none;
+        padding:  $thumbnail_padding;
+        border:   $thumbnail_border;
+        -webkit-user-select: none;
+        -moz-user-select:    none;
+        -ms-user-select:     none;
+        img
+        {
+          -webkit-user-drag: none;
+        }
       }
-    }
 
-    .thumbnail.selected
-    {
-      background: $thumbnail_selected_color;
+      .thumbnail.selected
+      {
+        background: $thumbnail_selected_color;
+      }
     }
   }
 }

@@ -23,7 +23,7 @@ sanitized_options = (opts) ->
     limit:            undefined,
     limit_reached:    undefined,
     pickerContainer:  "<ul class='thumbnails image_picker_selector' />",
-    entryContainer:   "<a href='javascript:void(0);' />",
+    entryContainer:   "<a href='javascript:void(0);' class='thumbnail_container' />",
     thumbnail:       "<div class='thumbnail' />",
   }
   jQuery.extend(default_options, opts)
