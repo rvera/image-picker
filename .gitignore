@@ -2,3 +2,4 @@
 .sass-cache
 page
 build.sh
+bower_components
