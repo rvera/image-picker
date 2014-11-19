@@ -1,0 +1,16 @@
+{
+  "name": "image-picker",
+  "version": "0.2.4",
+  "homepage": "http://rvera.github.io/image-picker/",
+  "authors": [
+    "Rodrigo Vera <http://rvera.github.com/>"
+  ],
+  "description": "Image Picker is a simple jQuery plugin that transforms a select element into a more user friendly graphical interface.",
+  "keywords": [
+    "bootstrap",
+    "image",
+    "select",
+    "picker"
+  ],
+  "license": "MIT"
+}
