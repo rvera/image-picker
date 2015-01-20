@@ -1,0 +1,18 @@
+/* Assuming you added a tag 'data-img-class="custom-class"' to the <option> elements, */
+/* a) change the <div> appearence: */
+ul.thumbnails.image_picker_selector li .thumbnail.custom-class {
+    height: 120px;
+}
+ul.thumbnails.image_picker_selector li .thumbnail.custom-class.selected {
+    background: green;
+}
+/* b) change the <img> appearence: */
+ul.thumbnails.image_picker_selector li .thumbnail img.custom-class {
+    width: 75px;
+}
+/* c) change the <p> appearence: */
+ul.thumbnails.image_picker_selector li .thumbnail img.custom-class + p {
+    font-size: 75%;
+    width: 75px;
+    line-height: initial;
+}

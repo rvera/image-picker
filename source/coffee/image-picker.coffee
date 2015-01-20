@@ -123,6 +123,9 @@ class ImagePickerOption
   has_image: () ->
     @option.data("img-src")?
 
+  has_class: () ->
+    @option.data("img-class")?
+
   is_blank: () ->
     !(@value()? && @value() != "")
 
@@ -158,6 +161,9 @@ class ImagePickerOption
     image = jQuery("<img class='image_picker_image'/>")
     image.attr("src", @option.data("img-src"))
     thumbnail = jQuery("<div class='thumbnail'>")
+    if @has_class()
+      image.addClass(@option.data("img-class"))
+      thumbnail.addClass(@option.data("img-class"))
     thumbnail.click {option: this}, (event) ->
       event.data.option.clicked()
     thumbnail.append(image)
