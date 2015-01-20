@@ -39,7 +39,8 @@
       clicked: void 0,
       selected: void 0,
       limit: void 0,
-      limit_reached: void 0
+      limit_reached: void 0,
+      font_awesome: false
     };
     return jQuery.extend(default_options, opts);
   };
@@ -272,12 +273,18 @@
     };
 
     ImagePickerOption.prototype.create_node = function() {
-      var image, thumbnail;
-      this.node = jQuery("<li/>");
-      image = jQuery("<img class='image_picker_image'/>");
-      image.attr("src", this.option.data("img-src"));
-      thumbnail = jQuery("<div class='thumbnail'>");
-      thumbnail.click({
+        var image, thumbnail;
+        this.node = jQuery("<li/>");
+        if (this.opts.font_awesome) {
+            image = jQuery("<i>");
+            image.attr("class", "fa-fw " + this.option.data("img-src"));
+        } else {
+            image = jQuery("<img class='image_picker_image'/>");
+            image.attr("src", this.option.data("img-src"));
+        }
+
+        thumbnail = jQuery("<div class='thumbnail'>");
+        thumbnail.click({
         option: this
       }, function(event) {
         return event.data.option.clicked();
