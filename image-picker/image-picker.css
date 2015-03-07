@@ -12,6 +12,7 @@ ul.thumbnails.image_picker_selector {
     list-style-type: none;
     padding: 0px;
     margin: 0px; }
+  ul.thumbnails.image_picker_selector li.group {width:100%;} 
   ul.thumbnails.image_picker_selector li.group_title {
     float: none; }
   ul.thumbnails.image_picker_selector li {
