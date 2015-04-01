@@ -232,8 +232,12 @@
     };
 
     ImagePickerOption.prototype.is_selected = function() {
-      var select_value;
-      select_value = this.picker.select.val();
+      var select_value, selected_index;
+      selected_index = this.picker.select.prop('selectedIndex');
+      select_value = null;
+      if (selected_index >= 0) {
+        select_value = this.picker.picker_options[selected_index].value();
+      }
       if (this.picker.multiple) {
         return jQuery.inArray(this.value(), select_value) >= 0;
       } else {
