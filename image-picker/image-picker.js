@@ -262,7 +262,7 @@
     };
 
     ImagePickerOption.prototype.label_location = function() {
-      return this.option.val();
+      return this.option.text();
     };
 
     ImagePickerOption.prototype.clicked = function() {
