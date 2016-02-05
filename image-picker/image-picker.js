@@ -288,7 +288,7 @@
       });
       thumbnail.append(image);
       if (this.opts.show_label) {
-        if (this.opts.label_location() === 'top') {
+        if (this.label_location() === 'top') {
           thumbnail.prepend(jQuery("<p/>").html(this.label()));
         } else {
           thumbnail.append(jQuery("<p/>").html(this.label()));
