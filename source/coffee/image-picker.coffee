@@ -27,6 +27,8 @@ sanitized_options = (opts) ->
 
 both_array_are_equal = (a,b) ->
   return false if (!a || !b) || (a.length != b.length)
+  a = a[..]
+  b = b[..]
   a.sort()
   b.sort()
   for x, i in a
