@@ -77,7 +77,7 @@ class ImagePicker
       option_group = jQuery(option_group)
       container    = jQuery("<ul></ul>")
       container.append jQuery("<li class='group_title'>#{option_group.attr("label")}</li>")
-      target_container.append jQuery("<li>").append(container)
+      target_container.append jQuery("<li class='group'>").append(container)
       @recursively_parse_option_groups(option_group, container)
     for option in (new ImagePickerOption(option, this, @opts) for option in scoped_dom.children("option"))
       @picker_options.push option

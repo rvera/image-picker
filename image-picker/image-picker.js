@@ -121,7 +121,7 @@
         option_group = jQuery(option_group);
         container = jQuery("<ul></ul>");
         container.append(jQuery("<li class='group_title'>" + (option_group.attr("label")) + "</li>"));
-        target_container.append(jQuery("<li>").append(container));
+        target_container.append(jQuery("<li class='group'>").append(container));
         this.recursively_parse_option_groups(option_group, container);
       }
       _ref1 = (function() {
