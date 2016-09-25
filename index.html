@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css">
   <link rel="stylesheet" type="text/css" href="examples.css">
   <link rel="stylesheet" type="text/css" href="image-picker/image-picker.css">
-  <script src="js/jquery.min.js" type="text/javascript"></script>
+  <script src="https://code.jquery.com/jquery-3.0.0.min.js" type="text/javascript"></script>
   <script src="js/prettify.js" type="text/javascript"></script>
   <script src="js/jquery.masonry.min.js" type="text/javascript"></script>
   <script src="js/show_html.js" type="text/javascript"></script>
@@ -47,18 +47,18 @@
     </div>
     <div class="picker">
       <select class='image-picker show-html'>
-        <option data-img-src='img/01.png' value='1'>  Page 1  </option>
-        <option data-img-src='img/02.png' value='2'>  Page 2  </option>
-        <option data-img-src='img/03.png' value='3'>  Page 3  </option>
-        <option data-img-src='img/04.png' value='4'>  Page 4  </option>
-        <option data-img-src='img/05.png' value='5'>  Page 5  </option>
-        <option data-img-src='img/06.png' value='6'>  Page 6  </option>
-        <option data-img-src='img/07.png' value='7'>  Page 7  </option>
-        <option data-img-src='img/08.png' value='8'>  Page 8  </option>
-        <option data-img-src='img/09.png' value='9'>  Page 9  </option>
-        <option data-img-src='img/10.png' value='10'> Page 10 </option>
-        <option data-img-src='img/11.png' value='11'> Page 11 </option>
-        <option data-img-src='img/12.png' value='12'> Page 12 </option>
+        <option data-img-src='img/01.png' data-img-class="first" data-img-alt="Page 1" value='1'>  Page 1  </option>
+        <option data-img-src='img/02.png' data-img-alt="Page 2"  value='2'>  Page 2  </option>
+        <option data-img-src='img/03.png' data-img-alt="Page 3"  value='3'>  Page 3  </option>
+        <option data-img-src='img/04.png' data-img-alt="Page 4"  value='4'>  Page 4  </option>
+        <option data-img-src='img/05.png' data-img-alt="Page 5"  value='5'>  Page 5  </option>
+        <option data-img-src='img/06.png' data-img-alt="Page 6"  value='6'>  Page 6  </option>
+        <option data-img-src='img/07.png' data-img-alt="Page 7"  value='7'>  Page 7  </option>
+        <option data-img-src='img/08.png' data-img-alt="Page 8"  value='8'>  Page 8  </option>
+        <option data-img-src='img/09.png' data-img-alt="Page 9"  value='9'>  Page 9  </option>
+        <option data-img-src='img/10.png' data-img-alt="Page 10" value='10'> Page 10 </option>
+        <option data-img-src='img/11.png' data-img-alt="Page 11" value='11'> Page 11 </option>
+        <option data-img-src='img/12.png' data-img-alt="Page 12" data-img-class="last" value='12'> Page 12 </option>
       </select>
     </div>
 
@@ -204,11 +204,11 @@
           <option data-img-src='http://placekitten.com/130/200' value='3'>Cute Kitten 3</option>
           <option data-img-src='http://placekitten.com/270/200' value='4'>Cute Kitten 4</option>
         </optgroup>
-        <optgroup label="Dogs">
-          <option data-img-src='http://placedog.com/220/200' value='5'>Doggie 1</option>
-          <option data-img-src='http://placedog.com/180/200' value='6'>Doggie 2</option>
-          <option data-img-src='http://placedog.com/130/200' value='7'>Doggie 3</option>
-          <option data-img-src='http://placedog.com/270/200' value='8'>Doggie 4</option>
+        <optgroup label="Animals">
+          <option data-img-src='http://lorempixel.com/220/200/animals/' value='5'>Animal 1</option>
+          <option data-img-src='http://lorempixel.com/180/200/animals/' value='6'>Animal 2</option>
+          <option data-img-src='http://lorempixel.com/130/200/animals/' value='7'>Animal 3</option>
+          <option data-img-src='http://lorempixel.com/270/200/animals/' value='8'>Animal 4</option>
         </optgroup>
       </select>
     </div>
@@ -238,26 +238,33 @@
       <dl class="dl-horizontal">
         <dt>initialized</dt>
         <dd>
+          <code>function(imagePicker){...}</code> <br/>
           Default: undefined. Specify a function to be called when the picker has been initialized.
+          Receives the image picker as the first argument.
         </dd>
         <dt>changed</dt>
         <dd>
+          <code>function(select, newValues, oldValues, event){...}</code> <br/>
           Default: undefined. Specify a function to be called when the picker has changed.
-          Receives the old values as the first option and the new values as the second.
+          Receives the original select as the first argument, old values as the second, the new values as the third and the original event that triggered this as the fourth.
         </dd>
         <dt>clicked</dt>
         <dd>
+          <code>function(select, picker option, event){...}</code> <br/>
           Default: undefined. Specify a function to be called when an option has been clicked.
-          Receives the image picker options as the first arguments.
+          Receives the original select as the first argument, the image picker option as the second and the original event as the third argument.
         </dd>
         <dt>selected</dt>
         <dd>
+          <code>function(select, picker option, event){...}</code> <br/>
           Default: undefined. Specify a function to be called when an option has been selected.
-          Receives the image picker options as the first arguments.
+          Receives the original select as the first argument, the image picker option as the second and the original event as the third argument.
         </dd>
         <dt>limit_reached</dt>
         <dd>
+          <code>function(select){...}</code> <br/>
           Default: undefined. Specify a function to be called when the limit cap has been reached.
+          Receives the original select as the first argument.
         </dd>
       </dl>
 
@@ -301,12 +308,22 @@
           the displayed image. This will not be escaped so you can actually put HTML
           here (although I wouldn't recommend it).
         </dd>
+        <dt>data-img-class</dt>
+        <dd>
+          Optional. A custom class to be added to the generated picture and container
+        </dd>
+        <dt>data-img-alt</dt>
+        <dd>
+          Optional. Alt propery for the image
+        </dd>
       </dl>
       Example:
       <pre class="prettyprint lang-html">
         &lt;option
           data-img-src='http://www.example.com/image.jpg'
           data-img-label='Just an image!'
+          data-img-class="custom-class"
+          data-img-alt="Just an image alt!"
           value='42'
         &gt;
       </pre>
