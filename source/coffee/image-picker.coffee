@@ -1,7 +1,6 @@
 #
 # Image Picker source
 # by Rodrigo Vera
-# original limit-functionality added by Jason M. Batchelor
 #
 jQuery.fn.extend({
   imagepicker: (opts = {}) ->
@@ -46,14 +45,13 @@ class ImagePicker
     for option in @picker_options
       option.destroy()
     @picker.remove()
-    @select.unbind("change")
+    @select.off("change", @sync_picker_with_select)
     @select.removeData "picker"
     @select.show()
 
   build_and_append_picker: () ->
     @select.hide() if @opts.hide_select
-    @select.change =>
-      @sync_picker_with_select()
+    @select.on("change", @sync_picker_with_select)
     @picker.remove() if @picker?
     @create_picker()
     @select.after(@picker)
@@ -94,7 +92,7 @@ class ImagePicker
     else
       [@select.val()]
 
-  toggle: (imagepicker_option) ->
+  toggle: (imagepicker_option, original_event) ->
     old_values = @selected_values()
     selected_value = imagepicker_option.value().toString()
     if @multiple
@@ -116,7 +114,7 @@ class ImagePicker
         @select.val(selected_value)
     unless both_array_are_equal(old_values, @selected_values())
       @select.change()
-      @opts.changed.call(@select, old_values, @selected_values()) if @opts.changed?
+      @opts.changed.call(@select, old_values, @selected_values(), original_event) if @opts.changed?
 
 
 class ImagePickerOption
@@ -125,7 +123,7 @@ class ImagePickerOption
     @create_node()
 
   destroy: ->
-    @node.find(".thumbnail").unbind()
+    @node.find(".thumbnail").off("click", @clicked)
 
   has_image: () ->
     @option.data("img-src")?
@@ -155,18 +153,27 @@ class ImagePickerOption
     else
       @option.text()
 
-  clicked: () =>
-    @picker.toggle(this)
-    @opts.clicked.call(@picker.select, this)  if @opts.clicked?
-    @opts.selected.call(@picker.select, this) if @opts.selected? and @is_selected()
+  clicked: (event) =>
+    @picker.toggle(this, event)
+    @opts.clicked.call(@picker.select, this, event)  if @opts.clicked?
+    @opts.selected.call(@picker.select, this, event) if @opts.selected? and @is_selected()
 
   create_node: () ->
     @node = jQuery("<li/>")
     image = jQuery("<img class='image_picker_image'/>")
     image.attr("src", @option.data("img-src"))
     thumbnail = jQuery("<div class='thumbnail'>")
-    thumbnail.click {option: this}, (event) ->
-      event.data.option.clicked()
+    # Add custom class
+    imgClass = @option.data("img-class")
+    if imgClass
+      @node.addClass(imgClass)
+      image.addClass(imgClass)
+      thumbnail.addClass(imgClass)
+    # Add image alt
+    imgAlt = @option.data("img-alt")
+    if imgAlt
+      image.attr('alt', imgAlt);
+    thumbnail.on("click", @clicked)  
     thumbnail.append(image)
     thumbnail.append(jQuery("<p/>").html(@label())) if @opts.show_label
     @node.append( thumbnail )
