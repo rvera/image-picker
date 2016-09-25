@@ -261,6 +261,10 @@
       }
     };
 
+    ImagePickerOption.prototype.label_location = function() {
+      return this.option.text();
+    };
+
     ImagePickerOption.prototype.clicked = function() {
       this.picker.toggle(this);
       if (this.opts.clicked != null) {
@@ -284,7 +288,11 @@
       });
       thumbnail.append(image);
       if (this.opts.show_label) {
-        thumbnail.append(jQuery("<p/>").html(this.label()));
+        if (this.label_location() === 'top') {
+          thumbnail.prepend(jQuery("<p/>").html(this.label()));
+        } else {
+          thumbnail.append(jQuery("<p/>").html(this.label()));
+        }
       }
       this.node.append(thumbnail);
       return this.node;

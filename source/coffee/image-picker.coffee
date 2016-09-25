@@ -155,6 +155,9 @@ class ImagePickerOption
     else
       @option.text()
 
+  label_location: () ->
+    @option.text()
+
   clicked: () =>
     @picker.toggle(this)
     @opts.clicked.call(@picker.select, this)  if @opts.clicked?
@@ -168,6 +171,11 @@ class ImagePickerOption
     thumbnail.click {option: this}, (event) ->
       event.data.option.clicked()
     thumbnail.append(image)
+    if @opts.show_label
+      if @label_location() == 'top'
+        thumbnail.prepend jQuery('<p/>').html(@label())
+      else
+        thumbnail.append jQuery('<p/>').html(@label())
     thumbnail.append(jQuery("<p/>").html(@label())) if @opts.show_label
     @node.append( thumbnail )
     @node
