@@ -26,7 +26,14 @@ sanitized_options = (opts) ->
   jQuery.extend(default_options, opts)
 
 both_array_are_equal = (a,b) ->
-  jQuery(a).not(b).length == 0 && jQuery(b).not(a).length == 0
+  return false if (!a || !b) || (a.length != b.length)
+  a = a[..]
+  b = b[..]
+  a.sort()
+  b.sort()
+  for x, i in a
+    return false if b[i] != x
+  true
 
 class ImagePicker
   constructor: (select_element, @opts={}) ->
