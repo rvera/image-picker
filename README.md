@@ -1,4 +1,4 @@
-# Image Picker 0.3.0
+# Image Picker 0.3.1
 
 Image Picker is a simple jQuery plugin that transforms a select element into a more user friendly graphical interface.
 
@@ -12,6 +12,10 @@ Visit http://rvera.github.com/image-picker
 
 # What's new
 
+0.3.1
+----
+- Enhancements:
+    - NPM support thanks to @JD-Robbs
 0.3.0
 ----
 - Enhancements:
