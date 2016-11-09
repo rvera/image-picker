@@ -132,7 +132,10 @@ class ImagePickerOption
     !(@value()? && @value() != "")
 
   is_selected: () ->
-    select_value = @picker.select.val()
+    selected_index = @picker.select.prop('selectedIndex');
+    select_value = null
+    if selected_index >= 0
+      select_value = @picker.picker_options[selected_index].value()
     if @picker.multiple
       jQuery.inArray(@value(), select_value) >= 0
     else
