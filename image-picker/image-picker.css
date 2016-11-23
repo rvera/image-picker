@@ -28,3 +28,5 @@ ul.thumbnails.image_picker_selector {
         -webkit-user-drag: none; }
     ul.thumbnails.image_picker_selector li .thumbnail.selected {
       background: #0088cc; }
+.not-displayed {
+  display: none; }

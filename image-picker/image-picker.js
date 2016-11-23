@@ -22,6 +22,22 @@
           select.data("picker").destroy();
         }
         select.data("picker", new ImagePicker(this, sanitized_options(opts)));
+
+        var iterationNumber = 0;
+        var allOptions = sanitized_options(opts)
+        var interval = allOptions.time_interval;
+
+        //Look over each picture in order to display it
+        jQuery(".image_picker_image").each(function() {
+          var $this = jQuery(this);
+          //If timer is set, display pictures according to it
+          //To avoid loading of to many pictures
+          setTimeout(function() {
+            $this.removeClass('not-displayed');
+          }, interval * iterationNumber);
+          iterationNumber++;
+        });
+
         if (opts.initialized != null) {
           return opts.initialized.call(select.data("picker"));
         }
@@ -39,7 +55,14 @@
       clicked: void 0,
       selected: void 0,
       limit: void 0,
-      limit_reached: void 0
+      limit_reached: void 0,
+      /*
+       * time_interval: integer
+       * Time to wait between loading of two pictures
+       * Used to avoid loading of too many pictures
+       * and browser freezing
+       */
+      time_interval: 0
     };
     return jQuery.extend(default_options, opts);
   };
@@ -281,7 +304,7 @@
     ImagePickerOption.prototype.create_node = function() {
       var image, imgAlt, imgClass, thumbnail;
       this.node = jQuery("<li/>");
-      image = jQuery("<img class='image_picker_image'/>");
+      image = jQuery("<img class='not-displayed image_picker_image'/>");
       image.attr("src", this.option.data("img-src"));
       thumbnail = jQuery("<div class='thumbnail'>");
       imgClass = this.option.data("img-class");
