@@ -148,10 +148,11 @@ class ImagePickerOption
     @option.val()
 
   label: () ->
+    unless String::trim then String::trim = -> @replace /^\s+|\s+$/g, ""
     if @option.data("img-label")
-      @option.data("img-label")
+      @option.data("img-label").trim()
     else
-      @option.text()
+      @option.text().trim()
 
   clicked: (event) =>
     @picker.toggle(this, event)
@@ -173,8 +174,9 @@ class ImagePickerOption
     imgAlt = @option.data("img-alt")
     if imgAlt
       image.attr('alt', imgAlt);
-    thumbnail.on("click", @clicked)  
+    thumbnail.on("click", @clicked)
+    @node.data('caption', @label())
     thumbnail.append(image)
-    thumbnail.append(jQuery("<p/>").html(@label())) if @opts.show_label
+    thumbnail.append(jQuery("<div class='caption'/>").append(jQuery("<p/>").html(@label()))) if @opts.show_label
     @node.append( thumbnail )
     @node
