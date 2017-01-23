@@ -173,8 +173,8 @@ class ImagePickerOption
     imgAlt = @option.data("img-alt")
     if imgAlt
       image.attr('alt', imgAlt);
-    thumbnail.on("click", @clicked)  
+    thumbnail.on("click", @clicked)
     thumbnail.append(image)
-    thumbnail.append(jQuery("<p/>").html(@label())) if @opts.show_label
+    thumbnail.append(jQuery("<div class='caption'/>").append(jQuery("<p/>").html(@label()))) if @opts.show_label
     @node.append( thumbnail )
     @node
