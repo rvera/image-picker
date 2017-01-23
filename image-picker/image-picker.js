@@ -255,10 +255,15 @@
     };
 
     ImagePickerOption.prototype.label = function() {
+      if (!String.prototype.trim) {
+        String.prototype.trim = function() {
+          return this.replace(/^\s+|\s+$/g, "");
+        };
+      }
       if (this.option.data("img-label")) {
-        return this.option.data("img-label");
+        return this.option.data("img-label").trim();
       } else {
-        return this.option.text();
+        return this.option.text().trim();
       }
     };
 
@@ -289,6 +294,7 @@
         image.attr('alt', imgAlt);
       }
       thumbnail.on("click", this.clicked);
+      this.node.data('caption', this.label());
       thumbnail.append(image);
       if (this.opts.show_label) {
         thumbnail.append(jQuery("<div class='caption'/>").append(jQuery("<p/>").html(this.label())));
