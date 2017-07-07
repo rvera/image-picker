@@ -39,6 +39,7 @@ class ImagePicker
     @select         = jQuery(select_element)
     @multiple       = @select.attr("multiple") == "multiple"
     @opts.limit     = parseInt(@select.data("limit")) if @select.data("limit")?
+    @setup_data_bind()
     @build_and_append_picker()
 
   destroy: ->
@@ -56,6 +57,14 @@ class ImagePicker
     @create_picker()
     @select.after(@picker)
     @sync_picker_with_select()
+
+  setup_data_bind: () ->
+    observer = new MutationObserver (mutations) ->
+      mutations.forEach (mutation) ->
+        console.log(mutation)
+      true
+    observer.observe(jQuery(@select).get(0), { childList: true });
+    true
 
   sync_picker_with_select: () =>
     for option in @picker_options
