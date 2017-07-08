@@ -39,8 +39,8 @@ class ImagePicker
     @select         = jQuery(select_element)
     @multiple       = @select.attr("multiple") == "multiple"
     @opts.limit     = parseInt(@select.data("limit")) if @select.data("limit")?
-    @setup_data_bind()
     @build_and_append_picker()
+    @setup_data_bind()
 
   destroy: ->
     for option in @picker_options
@@ -59,12 +59,14 @@ class ImagePicker
     @sync_picker_with_select()
 
   setup_data_bind: () ->
+    context = this;
     observer = new MutationObserver (mutations) ->
       mutations.forEach (mutation) ->
-        console.log(mutation)
+        for option in mutation.addedNodes
+          context.add_option(option.index, option)
       true
     observer.observe(jQuery(@select).get(0), { childList: true });
-    true
+    return
 
   sync_picker_with_select: () =>
     for option in @picker_options
@@ -78,6 +80,13 @@ class ImagePicker
     @picker_options = []
     @recursively_parse_option_groups(@select, @picker)
     @picker
+
+  add_option: (index, option) ->
+    option = new ImagePickerOption option, this, @opts
+    @picker_options.splice index, 0, option
+    return if !option.has_image()
+    @picker.children().eq(index).before(option.node)
+    return
 
   recursively_parse_option_groups: (scoped_dom, target_container) ->
     for option_group in scoped_dom.children("optgroup")
