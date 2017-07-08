@@ -13,6 +13,7 @@ jQuery.fn.extend({
 
 sanitized_options = (opts) ->
   default_options = {
+    auto_update:      false,
     hide_select:      true,
     show_label:       false,
     initialized:      undefined,
@@ -40,7 +41,8 @@ class ImagePicker
     @multiple       = @select.attr("multiple") == "multiple"
     @opts.limit     = parseInt(@select.data("limit")) if @select.data("limit")?
     @build_and_append_picker()
-    @setup_data_bind()
+    if @opts.auto_update
+      @setup_data_bind()
 
   destroy: ->
     for option in @picker_options
