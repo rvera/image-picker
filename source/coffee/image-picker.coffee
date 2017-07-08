@@ -69,7 +69,7 @@ class ImagePicker
         for option in mutation.removedNodes
           context.remove_option(option)
       true
-    observer.observe(jQuery(@select).get(0), { childList: true });
+    observer.observe(jQuery(@select).get(0), { childList: true, subtree: true });
     return
 
   sync_picker_with_select: () =>
@@ -86,10 +86,15 @@ class ImagePicker
     @picker
 
   add_option: (index, option) ->
+    container = @picker
+    optGroup = jQuery(option).parent("optgroup")
+    if optGroup
+      groupIndex = jQuery("optgroup", @select).index(optGroup)
+      container = jQuery(".group", @picker).eq(groupIndex).first("ul")
     option = new ImagePickerOption option, this, @opts
     return if !option.has_image()
     @picker_options.splice index, 0, option
-    @picker.children().eq(index).before(option.node)
+    container.children().eq(index).before(option.node)
     return
 
   remove_option: (option) ->
