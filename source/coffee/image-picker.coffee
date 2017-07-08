@@ -64,6 +64,8 @@ class ImagePicker
       mutations.forEach (mutation) ->
         for option in mutation.addedNodes
           context.add_option(option.index, option)
+        for option in mutation.removedNodes
+          context.remove_option(option)
       true
     observer.observe(jQuery(@select).get(0), { childList: true });
     return
@@ -83,10 +85,14 @@ class ImagePicker
 
   add_option: (index, option) ->
     option = new ImagePickerOption option, this, @opts
-    @picker_options.splice index, 0, option
     return if !option.has_image()
+    @picker_options.splice index, 0, option
     @picker.children().eq(index).before(option.node)
     return
+
+  remove_option: (option) ->
+    src = jQuery(option).data("img-src")
+    jQuery('.image_picker_image[src="'+src+'"]',@picker).closest("li").remove()
 
   recursively_parse_option_groups: (scoped_dom, target_container) ->
     for option_group in scoped_dom.children("optgroup")
