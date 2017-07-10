@@ -159,13 +159,18 @@
       if (!option.has_image()) {
         return;
       }
+      if (this.picker_options.length = index) {
+        container.append(option.node);
+      } else {
+        container.children().eq(index).before(option.node);
+      }
       this.picker_options.splice(index, 0, option);
-      container.children().eq(index).before(option.node);
     };
 
     ImagePicker.prototype.remove_option = function(option) {
       var src;
       src = jQuery(option).data("img-src");
+      this.picker_options.splice(jQuery.inArray(option, this.picker_options), 1);
       return jQuery('.image_picker_image[src="' + src + '"]', this.picker).closest("li").remove();
     };
 

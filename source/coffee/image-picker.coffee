@@ -93,12 +93,16 @@ class ImagePicker
       container = jQuery(".group", @picker).eq(groupIndex).first("ul")
     option = new ImagePickerOption option, this, @opts
     return if !option.has_image()
+    if @picker_options.length=index
+      container.append(option.node)
+    else
+      container.children().eq(index).before(option.node)
     @picker_options.splice index, 0, option
-    container.children().eq(index).before(option.node)
     return
 
   remove_option: (option) ->
     src = jQuery(option).data("img-src")
+    @picker_options.splice jQuery.inArray(option, @picker_options), 1
     jQuery('.image_picker_image[src="'+src+'"]',@picker).closest("li").remove()
 
   recursively_parse_option_groups: (scoped_dom, target_container) ->
