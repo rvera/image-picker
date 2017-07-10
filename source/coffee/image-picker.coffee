@@ -88,7 +88,7 @@ class ImagePicker
   add_option: (index, option) ->
     container = @picker
     optGroup = jQuery(option).parent("optgroup")
-    if optGroup
+    if optGroup.length>0
       groupIndex = jQuery("optgroup", @select).index(optGroup)
       container = jQuery(".group", @picker).eq(groupIndex).first("ul")
     option = new ImagePickerOption option, this, @opts

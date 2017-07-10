@@ -151,7 +151,7 @@
       var container, groupIndex, optGroup;
       container = this.picker;
       optGroup = jQuery(option).parent("optgroup");
-      if (optGroup) {
+      if (optGroup.length > 0) {
         groupIndex = jQuery("optgroup", this.select).index(optGroup);
         container = jQuery(".group", this.picker).eq(groupIndex).first("ul");
       }
