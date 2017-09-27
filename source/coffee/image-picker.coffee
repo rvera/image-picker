@@ -166,7 +166,7 @@ class ImagePickerOption
       image = jQuery("<i>")
       image.attr("class", "fa-fw " + this.option.data("img-src"))
     else
-      image = jQuery("<img class='image_picker_image'/>")
+      image = jQuery("<img class='image_picker_image' tabindex='0'/>")
       image.attr("src", @option.data("img-src"))
     thumbnail = jQuery("<div class='thumbnail'>")
     # Add custom class
@@ -179,7 +179,12 @@ class ImagePickerOption
     imgAlt = @option.data("img-alt")
     if imgAlt
       image.attr('alt', imgAlt);
-    thumbnail.on("click", @clicked)  
+    thumbnail.on("click", @clicked)
+    thumbnail.keypress (event) ->
+      if event.keyCode == 0 or event.keyCode == 32 or event.keyCode == 13
+        event.preventDefault()
+        thumbnail.click()
+      return
     thumbnail.append(image)
     thumbnail.append(jQuery("<p/>").html(@label())) if @opts.show_label
     @node.append( thumbnail )
