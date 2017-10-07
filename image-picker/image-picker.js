@@ -106,6 +106,16 @@
           results.push(option.unmark_as_selected());
         }
       }
+      $("li", this.picker).find(".thumbnail").each(function() {
+        if ($(this).hasClass("selected")) {
+          $(this).find(".image_picker_image").prop("tabindex", "0");
+        } else {
+          $(this).find(".image_picker_image").prop("tabindex", "-1");
+        }
+      });
+      if ($("li", this.picker).find(".selected").length === 0) {
+        $("li:first-child", this.picker).find(".image_picker_image").prop("tabindex", "0");
+      };
       return results;
     };
 
@@ -279,7 +289,7 @@
         image = jQuery("<i>");
         image.attr("class", "fa-fw " + this.option.data("img-src"));
       } else {
-        image = jQuery("<img class='image_picker_image' tabindex='0'/>");
+        image = jQuery("<img class='image_picker_image'/>");
         image.attr("src", this.option.data("img-src"));
       }
       thumbnail = jQuery("<div class='thumbnail'>");
@@ -294,12 +304,33 @@
         image.attr('alt', imgAlt);
       }
       thumbnail.on("click", this.clicked);
-      thumbnail.keypress(function(event) {
-        if (event.keyCode === 0 || event.keyCode === 32 || event.keyCode === 13) {
+      thumbnail.on("keydown", function(event) {
+        if (event.which === 0 || event.which === 32 || event.which === 13) {
           event.preventDefault();
           thumbnail.click();
+        } else if (event.which === 37 || event.which === 40) {
+          event.preventDefault();
+          $(this).parent().prev().find('.image_picker_image').prop('tabindex', '0');
+          $(this).parent().prev().find('.image_picker_image').focus();
+        } else if (event.which === 38 || event.which === 39) {
+          event.preventDefault();
+          $(this).parent().next().find('.image_picker_image').prop('tabindex', '0');
+          $(this).parent().next().find('.image_picker_image').focus();
         }
-      })
+      });
+      thumbnail.on("focusout", function(event) {
+        $(this).closest("ul").find(".thumbnail").each(function() {
+          //if ($(this).hasClass("selected")) {
+          if ($(this).hasClass("selected") && !$(event.relatedTarget).hasClass("image_picker_image")) {
+            $(this).find(".image_picker_image").prop("tabindex", "0");
+          } else {
+            $(this).find(".image_picker_image").prop("tabindex", "-1");
+          }
+        });
+        if ($(this).closest("ul").find(".selected").length === 0 && !$(event.relatedTarget).hasClass("image_picker_image")){
+          $("li:first-child", $(this).closest("ul")).find(".image_picker_image").prop("tabindex", "0");
+        }
+      });
       thumbnail.append(image);
       if (this.opts.show_label) {
         thumbnail.append(jQuery("<p/>").html(this.label()));
