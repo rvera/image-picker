@@ -23,3 +23,11 @@ Visit http://rvera.github.com/image-picker
 - Pass original events when firing custom events
 - Fixed #49
 - Fixed #78 (Thanks @rdennis!)
+
+
+# Contributing
+
+To contribute, please modify the CoffeeScript source and compile the source using
+
+    npm install
+    npm run build

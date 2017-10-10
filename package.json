@@ -12,5 +12,18 @@
     "Picker",
     "jquery"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "coffeescript": "^2.0.1",
+    "node-sass": "^4.5.3"
+  },
+  "scripts": {
+    "build": "npm run build-coffee && npm run build-sass",
+    "watch": "npm run watch-coffee",
+    "build-coffee": "coffee --compile --transpile --output image-picker/ source/coffee/",
+    "watch-coffee": "coffee --watch --output image-picker/ source/coffee/",
+    "build-sass": "node-sass -c source/sass -o image-picker"
+  }
 }
