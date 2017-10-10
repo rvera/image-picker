@@ -63,6 +63,14 @@ class ImagePicker
         option.mark_as_selected()
       else
         option.unmark_as_selected()
+    jQuery("li", @picker).each () ->
+      if jQuery(this).hasClass("selected")
+        jQuery(this).find(".image_picker_image").prop("tabindex", "0");
+      else
+        jQuery(this).find(".image_picker_image").prop("tabindex", "-1");
+    if jQuery(this).find(":selected").length == 0
+      $("li:first-child", @picker).find(".image_picker_image").prop("tabindex", "0");
+
 
   create_picker: () ->
     @picker         =  jQuery("<ul class='thumbnails image_picker_selector'></ul>")
@@ -160,7 +168,7 @@ class ImagePickerOption
 
   create_node: () ->
     @node = jQuery("<li/>")
-    image = jQuery("<img class='image_picker_image'/>")
+    image = jQuery("<img class='image_picker_image' tabindex='0'/>")
     image.attr("src", @option.data("img-src"))
     thumbnail = jQuery("<div class='thumbnail'>")
     # Add custom class
@@ -173,7 +181,38 @@ class ImagePickerOption
     imgAlt = @option.data("img-alt")
     if imgAlt
       image.attr('alt', imgAlt);
-    thumbnail.on("click", @clicked)  
+    thumbnail.on("click", @clicked)
+    thumbnail.on("keydown", (event) ->
+      if event.which == 0 || event.which == 13 || event.which == 32
+        event.preventDefault()
+        thumbnail.click()
+      else if event.which == 37 || event.which == 38
+        event.preventDefault();
+        $(this).parent().prev().find(".image_picker_image").prop("tabindex", "0");
+        $(this).parent().prev().find(".image_picker_image").focus();
+      else if event.which == 39 || event.which == 40
+        event.preventDefault();
+        $(this).parent().next().find(".image_picker_image").prop("tabindex", "0");
+        $(this).parent().next().find(".image_picker_image").focus();
+      return
+    )
+    thumbnail.on("focusout", (event) ->
+      exitingCtrl = !$(this).parent().siblings().is($(event.relatedTarget).closest("li"));
+      $(this).closest("ul").find(".thumbnail").each () ->
+        if $(this).hasClass("selected") && exitingCtrl
+          $(this).find(".image_picker_image").prop("tabindex", "0");
+        else
+          $(this).find(".image_picker_image").prop("tabindex", "-1");
+        return
+      if $(this).closest("ul").find(".selected").length == 0 && exitingCtrl
+        $("li:first-child", $(this).closest("ul")).find(".image_picker_image").prop("tabindex", "0");
+      return
+    )
+    thumbnail.on("focusin", () ->
+      $(this).closest("ul").find(".thumbnail").each () ->
+        $(this).find(".image_picker_image").prop("tabindex", "-1");
+      return
+    )
     thumbnail.append(image)
     thumbnail.append(jQuery("<p/>").html(@label())) if @opts.show_label
     @node.append( thumbnail )
