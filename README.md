@@ -29,5 +29,6 @@ Visit http://rvera.github.com/image-picker
 
 To contribute, please modify the CoffeeScript source and compile the source using
 
-    npm install
+    npm install    
+    npm install uglify-js -g
     npm run build
