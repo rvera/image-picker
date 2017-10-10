@@ -192,7 +192,7 @@ class ImagePickerOption
       if event.which == 0 || event.which == 13 || event.which == 32
         event.preventDefault()
         thumbnail.click()
-      else if event.which == 37 || event.which == 38
+      else if event.which == 37 || event.which == 40
         event.preventDefault();
         $(this).parent().prev().find(".image_picker_image").prop("tabindex", "0");
         $(this).parent().prev().find(".image_picker_image").focus();
