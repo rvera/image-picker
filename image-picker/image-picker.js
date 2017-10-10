@@ -5,7 +5,7 @@
 
   jQuery.fn.extend({
     imagepicker: function(opts) {
-      if (opts == null) {
+      if (opts === null) {
         opts = {};
       }
       return this.each(function() {
@@ -40,7 +40,7 @@
 
   both_array_are_equal = function(a, b) {
     var i, j, len, x;
-    if ((!a || !b) || (a.length !== b.length)) {
+    if ((!a || !b) || (a.length != b.length)) {
       return false;
     }
     a = a.slice(0);
@@ -49,7 +49,7 @@
     b.sort();
     for (i = j = 0, len = a.length; j < len; i = ++j) {
       x = a[i];
-      if (b[i] !== x) {
+      if (b[i] != x) {
         return false;
       }
     }
@@ -115,7 +115,7 @@
       });
       if ($("li", this.picker).find(".selected").length === 0) {
         $("li:first-child", this.picker).find(".image_picker_image").prop("tabindex", "0");
-      };
+      }
       return results;
     };
 
@@ -239,7 +239,7 @@
     };
 
     ImagePickerOption.prototype.is_blank = function() {
-      return !((this.value() != null) && this.value() !== "");
+      return !((this.value() != null) && this.value() != "");
     };
 
     ImagePickerOption.prototype.is_selected = function() {
@@ -305,14 +305,14 @@
       }
       thumbnail.on("click", this.clicked);
       thumbnail.on("keydown", function(event) {
-        if (event.which === 0 || event.which === 32 || event.which === 13) {
+        if (event.which === 0 || event.which === 13 || event.which === 32) {
           event.preventDefault();
           thumbnail.click();
-        } else if (event.which === 37 || event.which === 40) {
+        } else if (event.which === 37 || event.which === 38) {
           event.preventDefault();
           $(this).parent().prev().find(".image_picker_image").prop("tabindex", "0");
           $(this).parent().prev().find(".image_picker_image").focus();
-        } else if (event.which === 38 || event.which === 39) {
+        } else if (event.which === 39 || event.which === 40) {
           event.preventDefault();
           $(this).parent().next().find(".image_picker_image").prop("tabindex", "0");
           $(this).parent().next().find(".image_picker_image").focus();
@@ -330,6 +330,11 @@
         if ($(this).closest("ul").find(".selected").length === 0 && exitingCtrl) {
           $("li:first-child", $(this).closest("ul")).find(".image_picker_image").prop("tabindex", "0");
         }
+      });
+      thumbnail.on("focusin", function() {
+        $(this).closest("ul").find(".thumbnail").each(function() {
+          $(this).find(".image_picker_image").prop("tabindex", "-1");
+        });
       });
       thumbnail.append(image);
       if (this.opts.show_label) {
