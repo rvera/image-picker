@@ -21,6 +21,7 @@ sanitized_options = (opts) ->
     selected:         undefined,
     limit:            undefined,
     limit_reached:    undefined,
+    font_awesome:     false
   }
   jQuery.extend(default_options, opts)
 
@@ -168,8 +169,13 @@ class ImagePickerOption
 
   create_node: () ->
     @node = jQuery("<li/>")
-    image = jQuery("<img class='image_picker_image' tabindex='0'/>")
-    image.attr("src", @option.data("img-src"))
+    # font-awesome support
+    if @option.data("font_awesome")
+      image = jQuery("<i>")
+      image.attr("class", "fa-fw " + this.option.data("img-src"))
+    else
+      image = jQuery("<img class='image_picker_image' tabindex='0'/>")
+      image.attr("src", @option.data("img-src"))
     thumbnail = jQuery("<div class='thumbnail'>")
     # Add custom class
     imgClass = @option.data("img-class")

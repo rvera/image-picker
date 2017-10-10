@@ -43,7 +43,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       clicked: void 0,
       selected: void 0,
       limit: void 0,
-      limit_reached: void 0
+      limit_reached: void 0,
+      font_awesome: false
     };
     return jQuery.extend(default_options, opts);
   };
@@ -321,8 +322,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function create_node() {
         var image, imgAlt, imgClass, thumbnail;
         this.node = jQuery("<li/>");
-        image = jQuery("<img class='image_picker_image' tabindex='0'/>");
-        image.attr("src", this.option.data("img-src"));
+        // font-awesome support
+        if (this.option.data("font_awesome")) {
+          image = jQuery("<i>");
+          image.attr("class", "fa-fw " + this.option.data("img-src"));
+        } else {
+          image = jQuery("<img class='image_picker_image' tabindex='0'/>");
+          image.attr("src", this.option.data("img-src"));
+        }
         thumbnail = jQuery("<div class='thumbnail'>");
         // Add custom class
         imgClass = this.option.data("img-class");
