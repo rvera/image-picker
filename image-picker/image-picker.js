@@ -1,6 +1,6 @@
 (function() {
   var ImagePicker, ImagePickerOption, both_array_are_equal, sanitized_options,
-    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    bind = function(fn, me) { return function() { return fn.apply(me, arguments); }; },
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   jQuery.fn.extend({
@@ -107,14 +107,14 @@
         }
       }
       $("li", this.picker).find(".thumbnail").each(function() {
-        if ($(this).hasClass("selected")) {
-          $(this).find(".image_picker_image").prop("tabindex", "0");
+        if ($(this).hasClass("selected") && $("li", this.picker).find(':focus').length === 0) {
+          $(this).prop("tabindex", "0");
         } else {
-          $(this).find(".image_picker_image").prop("tabindex", "-1");
+          $(this).prop("tabindex", "-1");
         }
       });
-      if ($("li", this.picker).find(".selected").length === 0) {
-        $("li:first-child", this.picker).find(".image_picker_image").prop("tabindex", "0");
+      if ($("li", this.picker).find(".selected").length === 0 && $("li", this.picker).find(":focus").length === 0) {
+        $("li:first-child", this.picker).find(".selectable").prop("tabindex", "0");
       }
       return results;
     };
@@ -292,7 +292,7 @@
         image = jQuery("<img class='image_picker_image'/>");
         image.attr("src", this.option.data("img-src"));
       }
-      thumbnail = jQuery("<div class='thumbnail'>");
+      thumbnail = jQuery("<div class='thumbnail selectable'>");
       imgClass = this.option.data("img-class");
       if (imgClass) {
         this.node.addClass(imgClass);
@@ -308,33 +308,38 @@
         if (event.which === 0 || event.which === 13 || event.which === 32) {
           event.preventDefault();
           thumbnail.click();
+          $(this).focus();
         } else if (event.which === 37 || event.which === 38) {
           event.preventDefault();
-          $(this).parent().prev().find(".image_picker_image").prop("tabindex", "0");
-          $(this).parent().prev().find(".image_picker_image").focus();
+          $(this).parent().prev().find(".selectable").prop("tabindex", "0");
+          $(this).parent().prev().find(".selectable").focus();
         } else if (event.which === 39 || event.which === 40) {
           event.preventDefault();
-          $(this).parent().next().find(".image_picker_image").prop("tabindex", "0");
-          $(this).parent().next().find(".image_picker_image").focus();
+          $(this).parent().next().find(".selectable").prop("tabindex", "0");
+          $(this).parent().next().find(".selectable").focus();
         }
       });
       thumbnail.on("focusout", function(event) {
-        var exitingCtrl = !$(this).parent().siblings().is($(event.relatedTarget).closest("li"));
+        var exitingCtrl = !$(this).siblings().is($(event.relatedTarget).closest("li"));
         $(this).closest("ul").find(".thumbnail").each(function() {
           if ($(this).hasClass("selected") && exitingCtrl) {
-            $(this).find(".image_picker_image").prop("tabindex", "0");
+            $(this).prop("tabindex", "0");
           } else {
-            $(this).find(".image_picker_image").prop("tabindex", "-1");
+            $(this).prop("tabindex", "-1");
           }
         });
         if ($(this).closest("ul").find(".selected").length === 0 && exitingCtrl) {
-          $("li:first-child", $(this).closest("ul")).find(".image_picker_image").prop("tabindex", "0");
+          $("li:first-child", $(this).closest("ul")).find(".selectable").prop("tabindex", "0");
         }
       });
       thumbnail.on("focusin", function() {
         $(this).closest("ul").find(".thumbnail").each(function() {
-          $(this).find(".image_picker_image").prop("tabindex", "-1");
+          $(this).prop("tabindex", "-1");
         });
+      });
+      thumbnail.on("mousedown", function(event) {
+        event.preventDefault();
+        $(this).blur();
       });
       thumbnail.append(image);
       if (this.opts.show_label) {
@@ -343,6 +348,7 @@
       this.node.append(thumbnail);
       return this.node;
     };
+
     return ImagePickerOption;
 
   })();
