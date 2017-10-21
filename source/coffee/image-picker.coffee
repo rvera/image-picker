@@ -65,12 +65,14 @@ class ImagePicker
       else
         option.unmark_as_selected()
     jQuery("li", @picker).each () ->
-      if jQuery(this).hasClass("selected")
-        jQuery(this).find(".image_picker_image").prop("tabindex", "0");
+      if jQuery(this).hasClass("selected") && jQuery("li", @picker).find(":focus").length == 0
+        jQuery(this).prop("tabindex", "0");
       else
-        jQuery(this).find(".image_picker_image").prop("tabindex", "-1");
-    if jQuery(this).find(":selected").length == 0
-      $("li:first-child", @picker).find(".image_picker_image").prop("tabindex", "0");
+        jQuery(this).prop("tabindex", "-1");
+      return
+    if jQuery(this).find(":selected").length == 0 && jQuery("li", @picker).find(":focus").length == 0
+      $("li:first-child", @picker).find(".selectable").prop("tabindex", "0");
+    return
 
 
   create_picker: () ->
@@ -189,34 +191,42 @@ class ImagePickerOption
       image.attr('alt', imgAlt);
     thumbnail.on("click", @clicked)
     thumbnail.on("keydown", (event) ->
-      if event.which == 0 || event.which == 13 || event.which == 32
+      if event.which == 0 || event.which == 32
         event.preventDefault()
         thumbnail.click()
       else if event.which == 37 || event.which == 40
         event.preventDefault();
-        $(this).parent().prev().find(".image_picker_image").prop("tabindex", "0");
-        $(this).parent().prev().find(".image_picker_image").focus();
+        $(this).parent().prev().find(".thumbnail").prop("tabindex", "0");
+        $(this).parent().prev().find(".thumbnail").focus();
       else if event.which == 39 || event.which == 40
         event.preventDefault();
-        $(this).parent().next().find(".image_picker_image").prop("tabindex", "0");
-        $(this).parent().next().find(".image_picker_image").focus();
+        $(this).parent().next().find(".thumbnail").prop("tabindex", "0");
+        $(this).parent().next().find(".thumbnail").focus();
       return
     )
     thumbnail.on("focusout", (event) ->
-      exitingCtrl = !$(this).parent().siblings().is($(event.relatedTarget).closest("li"));
+      exitingCtrl = !$(this).siblings().is($(event.relatedTarget).closest("li"));
       $(this).closest("ul").find(".thumbnail").each () ->
         if $(this).hasClass("selected") && exitingCtrl
-          $(this).find(".image_picker_image").prop("tabindex", "0");
+          $(this).prop("tabindex", "0");
         else
-          $(this).find(".image_picker_image").prop("tabindex", "-1");
+          $(this).prop("tabindex", "-1");
         return
       if $(this).closest("ul").find(".selected").length == 0 && exitingCtrl
-        $("li:first-child", $(this).closest("ul")).find(".image_picker_image").prop("tabindex", "0");
+        $("li:first-child", $(this).closest("ul")).find(".thumbnail").prop("tabindex", "0");
       return
     )
     thumbnail.on("focusin", () ->
       $(this).closest("ul").find(".thumbnail").each () ->
-        $(this).find(".image_picker_image").prop("tabindex", "-1");
+        $(this).prop("tabindex", "-1");
+        return
+      return
+    )
+    thumbnail.on("mousedown", (event) ->
+      event.preventDefault();
+      $(this).closest("ul").find(".thumbnail").each () ->
+        $(this).blur();
+        return
       return
     )
     thumbnail.append(image)

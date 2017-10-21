@@ -22,6 +22,11 @@ ul.thumbnails.image_picker_selector
     margin:               0px;
   }
 
+  li.group
+  {
+    width: 100%
+  }
+
   li.group_title
   {
     float: none;
@@ -29,18 +34,20 @@ ul.thumbnails.image_picker_selector
 
   li
   {
-    margin:   0px $thumbnail_margin $thumbnail_margin 0px;
+    margin:   4px $thumbnail_margin $thumbnail_margin 4px;
     float:    left;
 
     .thumbnail
     {
       padding:  $thumbnail_padding;
       border:   $thumbnail_border;
+      border-radius: 4px;
       -webkit-user-select: none;
       -moz-user-select:    none;
       -ms-user-select:     none;
       img
       {
+        display:block;
         -webkit-user-drag: none;
       }
     }
