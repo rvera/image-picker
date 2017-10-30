@@ -18,6 +18,7 @@ sanitized_options = (opts) ->
     initialized:      undefined,
     changed:          undefined,
     clicked:          undefined,
+    dblclicked:       undefined,
     selected:         undefined,
     limit:            undefined,
     limit_reached:    undefined,
@@ -125,6 +126,7 @@ class ImagePickerOption
 
   destroy: ->
     @node.find(".thumbnail").off("click", @clicked)
+    @node.find(".thumbnail").off("dblclick", @dblclicked)
 
   has_image: () ->
     @option.data("img-src")?
@@ -159,6 +161,9 @@ class ImagePickerOption
     @opts.clicked.call(@picker.select, this, event)  if @opts.clicked?
     @opts.selected.call(@picker.select, this, event) if @opts.selected? and @is_selected()
 
+  dblclicked: (event) =>
+    @opts.dblclicked.call(@picker.select, this, event)  if @opts.dblclicked?
+
   create_node: () ->
     @node = jQuery("<li/>")
     # font-awesome support
@@ -180,6 +185,7 @@ class ImagePickerOption
     if imgAlt
       image.attr('alt', imgAlt);
     thumbnail.on("click", @clicked)  
+    thumbnail.on("dblclick", @dblclicked)
     thumbnail.append(image)
     thumbnail.append(jQuery("<p/>").html(@label())) if @opts.show_label
     @node.append( thumbnail )
