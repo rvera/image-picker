@@ -92,6 +92,10 @@
       }
       this.create_picker();
       this.select.after(this.picker);
+      
+      if (this.opts.collapse_groups) {
+        this.picker.find('.group_title').click();
+      }
       return this.sync_picker_with_select();
     };
 
@@ -124,7 +128,9 @@
         option_group = ref[j];
         option_group = jQuery(option_group);
         container = jQuery("<ul></ul>");
-        container.append(jQuery("<li class='group_title'>" + (option_group.attr("label")) + "</li>"));
+        var group_title = jQuery("<li class='group_title close'>" + option_group.attr("label") + "</li>");
+        group_title.click(this.toggleGroupVisibility);
+        container.append(group_title);
         target_container.append(jQuery("<li class='group'>").append(container));
         this.recursively_parse_option_groups(option_group, container);
       }
@@ -148,6 +154,15 @@
         results.push(target_container.append(option.node));
       }
       return results;
+    };
+    
+    ImagePicker.prototype.toggleGroupVisibility = function() {
+      $(this).parent().children('li').each(function () {
+        if(!$(this).hasClass('group_title'))
+          $(this).toggle();
+      });
+      $(this).toggleClass('close');
+      $(this).toggleClass('open');
     };
 
     ImagePicker.prototype.has_implicit_blanks = function() {
