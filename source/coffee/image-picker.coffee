@@ -93,6 +93,7 @@ class ImagePicker
       groupIndex = jQuery("optgroup", @select).index(optGroup)
       container = jQuery(".group", @picker).eq(groupIndex).first("ul")
     option = new ImagePickerOption option, this, @opts
+    option.unmark_as_selected()
     return if !option.has_image()
     if @picker_options.length==index
       container.append(option.node)
@@ -103,9 +104,12 @@ class ImagePicker
 
   remove_option: (option) ->
     return if @picker_options.length==0
-    src = jQuery(option).data("img-src")
-    @picker_options.splice jQuery.inArray(option, @picker_options), 1
-    jQuery('.image_picker_image[src="'+src+'"]',@picker).first().closest("li").remove()
+    val = jQuery(option).val()
+    for i in [@picker_options.length-1..0]
+      if @picker_options[i].value() == val
+        @picker_options[i].node.remove()
+        @picker_options.splice(i, 1);
+        @select.change()
 
   recursively_parse_option_groups: (scoped_dom, target_container) ->
     for option_group in scoped_dom.children("optgroup")
@@ -191,7 +195,6 @@ class ImagePickerOption
       @option.text()
 
   clicked: (event) =>
-    console.log "clicked"
     @picker.toggle(this, event)
     @opts.clicked.call(@picker.select, this, event)  if @opts.clicked?
     @opts.selected.call(@picker.select, this, event) if @opts.selected? and @is_selected()

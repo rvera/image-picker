@@ -178,6 +178,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           container = jQuery(".group", this.picker).eq(groupIndex).first("ul");
         }
         option = new ImagePickerOption(option, this, this.opts);
+        option.unmark_as_selected();
         if (!option.has_image()) {
           return;
         }
@@ -191,13 +192,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: "remove_option",
       value: function remove_option(option) {
-        var src;
+        var i, j, ref, results, val;
         if (this.picker_options.length === 0) {
           return;
         }
-        src = jQuery(option).data("img-src");
-        this.picker_options.splice(jQuery.inArray(option, this.picker_options), 1);
-        return jQuery('.image_picker_image[src="' + src + '"]', this.picker).first().closest("li").remove();
+        val = jQuery(option).val();
+        results = [];
+        for (i = j = ref = this.picker_options.length - 1; ref <= 0 ? j <= 0 : j >= 0; i = ref <= 0 ? ++j : --j) {
+          if (this.picker_options[i].value() === val) {
+            this.picker_options[i].node.remove();
+            this.picker_options.splice(i, 1);
+            results.push(this.select.change());
+          } else {
+            results.push(void 0);
+          }
+        }
+        return results;
       }
     }, {
       key: "recursively_parse_option_groups",
@@ -365,7 +375,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: "clicked",
       value: function clicked(event) {
-        console.log("clicked");
         this.picker.toggle(this, event);
         if (this.opts.clicked != null) {
           this.opts.clicked.call(this.picker.select, this, event);
