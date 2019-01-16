@@ -32,3 +32,7 @@ To contribute, please modify the CoffeeScript source and compile the source usin
     npm install    
     npm install uglify-js -g
     npm run build
+
+# More  
+
+Thanks to [@mazipan](https://github.com/mazipan) for porting to [Vue](https://github.com/mazipan/vue-select-image)
