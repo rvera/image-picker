@@ -114,18 +114,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: "sync_picker_with_select",
       value: function sync_picker_with_select() {
-        var j, len, option, ref, results;
+        var j, len, option, ref;
         ref = this.picker_options;
-        results = [];
         for (j = 0, len = ref.length; j < len; j++) {
           option = ref[j];
           if (option.is_selected()) {
-            results.push(option.mark_as_selected());
+            option.mark_as_selected();
           } else {
-            results.push(option.unmark_as_selected());
+            option.unmark_as_selected();
           }
         }
-        return results;
+        jQuery("li", this.picker).each(function () {
+          if (jQuery(this).hasClass("selected") && jQuery("li", this.picker).find(":focus").length === 0) {
+            jQuery(this).prop("tabindex", "0");
+          } else {
+            jQuery(this).prop("tabindex", "-1");
+          }
+        });
+        if (jQuery(this).find(":selected").length === 0 && jQuery("li", this.picker).find(":focus").length === 0) {
+          $("li:first-child", this.picker).find(".selectable").prop("tabindex", "0");
+        }
       }
     }, {
       key: "create_picker",
@@ -242,6 +250,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _classCallCheck(this, ImagePickerOption);
 
       this.clicked = this.clicked.bind(this);
+      this.key_down = this.key_down.bind(this);
       this.picker = picker;
       this.opts = opts1;
       this.option = jQuery(option_element);
@@ -310,6 +319,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
       }
     }, {
+      key: "key_down",
+      value: function key_down(node, thumbnail) {
+        return function (event) {
+          if (event.which === 0 || event.which === 32 || event.which === 13) {
+            event.preventDefault();
+            thumbnail.click();
+          } else if (event.which === 37 || event.which === 38) {
+            event.preventDefault();
+            node.prev().find(".thumbnail>img").prop("tabindex", "0");
+            node.prev().find(".thumbnail>img").focus();
+          } else if (event.which === 39 || event.which === 40) {
+            event.preventDefault();
+            node.next().find(".thumbnail>img").prop("tabindex", "0");
+            node.next().find(".thumbnail>img").focus();
+          }
+        };
+      }
+    }, {
       key: "create_node",
       value: function create_node() {
         var image, imgAlt, imgClass, thumbnail;
@@ -319,7 +346,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           image = jQuery("<i>");
           image.attr("class", "fa-fw " + this.option.data("img-src"));
         } else {
-          image = jQuery("<img class='image_picker_image'/>");
+          image = jQuery("<img class='image_picker_image' tabindex='0'/>");
           image.attr("src", this.option.data("img-src"));
         }
         thumbnail = jQuery("<div class='thumbnail'>");
@@ -336,6 +363,32 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           image.attr('alt', imgAlt);
         }
         thumbnail.on("click", this.clicked);
+        thumbnail.on("keydown", this.key_down(this.node, thumbnail));
+        thumbnail.on("focusout", function (event) {
+          var exitingCtrl;
+          exitingCtrl = !$(this).siblings().is($(event.relatedTarget).closest("li"));
+          $(this).closest("ul").find(".thumbnail").each(function () {
+            if ($(this).hasClass("selected") && exitingCtrl) {
+              $(this).prop("tabindex", "0");
+            } else {
+              $(this).prop("tabindex", "-1");
+            }
+          });
+          if ($(this).closest("ul").find(".selected").length === 0 && exitingCtrl) {
+            $("li:first-child", $(this).closest("ul")).find(".thumbnail").prop("tabindex", "0");
+          }
+        });
+        thumbnail.on("focusin", function () {
+          $(this).closest("ul").find(".thumbnail").each(function () {
+            $(this).prop("tabindex", "-1");
+          });
+        });
+        thumbnail.on("mousedown", function (event) {
+          event.preventDefault();
+          $(this).closest("ul").find(".thumbnail").each(function () {
+            $(this).blur();
+          });
+        });
         thumbnail.append(image);
         if (this.opts.show_label) {
           thumbnail.append(jQuery("<p/>").html(this.label()));

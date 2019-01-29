@@ -15,22 +15,26 @@ ul.thumbnails.image_picker_selector {
     padding: 0px;
     margin: 0px; }
   /* line 25, source/sass/image-picker.scss */
+  ul.thumbnails.image_picker_selector li.group {
+    width: 100%; }
+  /* line 30, source/sass/image-picker.scss */
   ul.thumbnails.image_picker_selector li.group_title {
     float: none; }
-  /* line 30, source/sass/image-picker.scss */
+  /* line 35, source/sass/image-picker.scss */
   ul.thumbnails.image_picker_selector li {
-    margin: 0px 12px 12px 0px;
+    margin: 4px 12px 12px 4px;
     float: left; }
-    /* line 35, source/sass/image-picker.scss */
+    /* line 40, source/sass/image-picker.scss */
     ul.thumbnails.image_picker_selector li .thumbnail {
       padding: 6px;
       border: 1px solid #DDD;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none; }
-      /* line 42, source/sass/image-picker.scss */
+      /* line 47, source/sass/image-picker.scss */
       ul.thumbnails.image_picker_selector li .thumbnail img {
+        display: block;
         -webkit-user-drag: none; }
-    /* line 48, source/sass/image-picker.scss */
+    /* line 54, source/sass/image-picker.scss */
     ul.thumbnails.image_picker_selector li .thumbnail.selected {
       background: #08C; }
