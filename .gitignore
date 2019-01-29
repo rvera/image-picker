@@ -3,3 +3,4 @@
 page
 build.sh
 bower_components
+/node_modules
