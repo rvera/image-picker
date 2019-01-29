@@ -169,19 +169,20 @@ class ImagePickerOption
     @opts.clicked.call(@picker.select, this, event)  if @opts.clicked?
     @opts.selected.call(@picker.select, this, event) if @opts.selected? and @is_selected()
 
-  key_down: (key) =>
-    if key == 0 || key == 32
-      event.preventDefault()
-      thumbnail.click()
-    else if key == 37 || key == 40
-      event.preventDefault();
-      $(this).parent().prev().find(".thumbnail").prop("tabindex", "0");
-      $(this).parent().prev().find(".thumbnail").focus();
-    else if key == 39 || key == 40
-      event.preventDefault();
-      $(this).parent().next().find(".thumbnail").prop("tabindex", "0");
-      $(this).parent().next().find(".thumbnail").focus();
-    return
+  key_down: (node, thumbnail) =>
+    return (event) =>
+      if event.which == 0 || event.which == 32 || event.which == 13
+        event.preventDefault()
+        thumbnail.click()
+      else if event.which == 37 || event.which == 38
+        event.preventDefault();
+        node.prev().find(".thumbnail>img").prop("tabindex", "0");
+        node.prev().find(".thumbnail>img").focus();
+      else if event.which == 39 || event.which == 40
+        event.preventDefault();
+        node.next().find(".thumbnail>img").prop("tabindex", "0");
+        node.next().find(".thumbnail>img").focus();
+      return
 
   create_node: () ->
     @node = jQuery("<li/>")
@@ -204,10 +205,7 @@ class ImagePickerOption
     if imgAlt
       image.attr('alt', imgAlt);
     thumbnail.on("click", @clicked)
-    thumbnail.on("keydown", (event) ->
-      @key_down(event.which)
-      return
-    )
+    thumbnail.on("keydown", @key_down(@node, thumbnail))
     thumbnail.on("focusout", (event) ->
       exitingCtrl = !$(this).siblings().is($(event.relatedTarget).closest("li"));
       $(this).closest("ul").find(".thumbnail").each () ->

@@ -320,19 +320,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }, {
       key: "key_down",
-      value: function key_down(key) {
-        if (key === 0 || key === 32) {
-          event.preventDefault();
-          thumbnail.click();
-        } else if (key === 37 || key === 40) {
-          event.preventDefault();
-          $(this).parent().prev().find(".thumbnail").prop("tabindex", "0");
-          $(this).parent().prev().find(".thumbnail").focus();
-        } else if (key === 39 || key === 40) {
-          event.preventDefault();
-          $(this).parent().next().find(".thumbnail").prop("tabindex", "0");
-          $(this).parent().next().find(".thumbnail").focus();
-        }
+      value: function key_down(node, thumbnail) {
+        return function (event) {
+          if (event.which === 0 || event.which === 32 || event.which === 13) {
+            event.preventDefault();
+            thumbnail.click();
+          } else if (event.which === 37 || event.which === 38) {
+            event.preventDefault();
+            node.prev().find(".thumbnail>img").prop("tabindex", "0");
+            node.prev().find(".thumbnail>img").focus();
+          } else if (event.which === 39 || event.which === 40) {
+            event.preventDefault();
+            node.next().find(".thumbnail>img").prop("tabindex", "0");
+            node.next().find(".thumbnail>img").focus();
+          }
+        };
       }
     }, {
       key: "create_node",
@@ -361,9 +363,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           image.attr('alt', imgAlt);
         }
         thumbnail.on("click", this.clicked);
-        thumbnail.on("keydown", function (event) {
-          this.key_down(event.which);
-        });
+        thumbnail.on("keydown", this.key_down(this.node, thumbnail));
         thumbnail.on("focusout", function (event) {
           var exitingCtrl;
           exitingCtrl = !$(this).siblings().is($(event.relatedTarget).closest("li"));
