@@ -250,6 +250,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _classCallCheck(this, ImagePickerOption);
 
       this.clicked = this.clicked.bind(this);
+      this.key_down = this.key_down.bind(this);
       this.picker = picker;
       this.opts = opts1;
       this.option = jQuery(option_element);
@@ -318,6 +319,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
       }
     }, {
+      key: "key_down",
+      value: function key_down(key) {
+        if (key === 0 || key === 32) {
+          event.preventDefault();
+          thumbnail.click();
+        } else if (key === 37 || key === 40) {
+          event.preventDefault();
+          $(this).parent().prev().find(".thumbnail").prop("tabindex", "0");
+          $(this).parent().prev().find(".thumbnail").focus();
+        } else if (key === 39 || key === 40) {
+          event.preventDefault();
+          $(this).parent().next().find(".thumbnail").prop("tabindex", "0");
+          $(this).parent().next().find(".thumbnail").focus();
+        }
+      }
+    }, {
       key: "create_node",
       value: function create_node() {
         var image, imgAlt, imgClass, thumbnail;
@@ -345,18 +362,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
         thumbnail.on("click", this.clicked);
         thumbnail.on("keydown", function (event) {
-          if (event.which === 0 || event.which === 32) {
-            event.preventDefault();
-            thumbnail.click();
-          } else if (event.which === 37 || event.which === 40) {
-            event.preventDefault();
-            $(this).parent().prev().find(".thumbnail").prop("tabindex", "0");
-            $(this).parent().prev().find(".thumbnail").focus();
-          } else if (event.which === 39 || event.which === 40) {
-            event.preventDefault();
-            $(this).parent().next().find(".thumbnail").prop("tabindex", "0");
-            $(this).parent().next().find(".thumbnail").focus();
-          }
+          this.key_down(event.which);
         });
         thumbnail.on("focusout", function (event) {
           var exitingCtrl;

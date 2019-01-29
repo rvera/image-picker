@@ -28,14 +28,13 @@ ul.thumbnails.image_picker_selector {
     ul.thumbnails.image_picker_selector li .thumbnail {
       padding: 6px;
       border: 1px solid #DDD;
-      border-radius: 4px;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none; }
-      /* line 48, source/sass/image-picker.scss */
+      /* line 47, source/sass/image-picker.scss */
       ul.thumbnails.image_picker_selector li .thumbnail img {
         display: block;
         -webkit-user-drag: none; }
-    /* line 55, source/sass/image-picker.scss */
+    /* line 54, source/sass/image-picker.scss */
     ul.thumbnails.image_picker_selector li .thumbnail.selected {
       background: #08C; }

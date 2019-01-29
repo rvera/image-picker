@@ -2,15 +2,31 @@
   "name": "image-picker",
   "version": "0.3.1",
   "homepage": "http://rvera.github.com/image-picker",
-  "authors": [
-    "Rodrigo Vera"
-  ],
+  "author": "Rodrigo Vera (http://rvera.github.io/)",
   "description": "Image Picker is a simple jQuery plugin that transforms a select element into a more user friendly graphical interface.",
   "main": "image-picker/image-picker.js",
+  "files": [
+    "image-picker"
+  ],
   "keywords": [
     "Image",
     "Picker",
     "jquery"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "coffeescript": "^2.0.1",
+    "node-sass": "^4.5.3",
+    "uglify-js": "^3.1.3"
+  },
+  "scripts": {
+    "build": "npm run build-coffee && npm run build-sass && npm run minify",
+    "watch": "npm run watch-coffee",
+    "build-coffee": "coffee --compile --transpile --output image-picker/ source/coffee/",
+    "watch-coffee": "coffee --watch --output image-picker/ source/coffee/",
+    "build-sass": "node-sass -c source/sass -o image-picker",
+    "minify": "uglifyjs image-picker/image-picker.js -c -o image-picker/image-picker.min.js"
+  }
 }
