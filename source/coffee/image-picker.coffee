@@ -169,6 +169,20 @@ class ImagePickerOption
     @opts.clicked.call(@picker.select, this, event)  if @opts.clicked?
     @opts.selected.call(@picker.select, this, event) if @opts.selected? and @is_selected()
 
+  key_down: (key) =>
+    if key == 0 || key == 32
+      event.preventDefault()
+      thumbnail.click()
+    else if key == 37 || key == 40
+      event.preventDefault();
+      $(this).parent().prev().find(".thumbnail").prop("tabindex", "0");
+      $(this).parent().prev().find(".thumbnail").focus();
+    else if key == 39 || key == 40
+      event.preventDefault();
+      $(this).parent().next().find(".thumbnail").prop("tabindex", "0");
+      $(this).parent().next().find(".thumbnail").focus();
+    return
+
   create_node: () ->
     @node = jQuery("<li/>")
     # font-awesome support
@@ -191,17 +205,7 @@ class ImagePickerOption
       image.attr('alt', imgAlt);
     thumbnail.on("click", @clicked)
     thumbnail.on("keydown", (event) ->
-      if event.which == 0 || event.which == 32
-        event.preventDefault()
-        thumbnail.click()
-      else if event.which == 37 || event.which == 40
-        event.preventDefault();
-        $(this).parent().prev().find(".thumbnail").prop("tabindex", "0");
-        $(this).parent().prev().find(".thumbnail").focus();
-      else if event.which == 39 || event.which == 40
-        event.preventDefault();
-        $(this).parent().next().find(".thumbnail").prop("tabindex", "0");
-        $(this).parent().next().find(".thumbnail").focus();
+      @key_down(event.which)
       return
     )
     thumbnail.on("focusout", (event) ->
