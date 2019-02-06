@@ -79,6 +79,16 @@ class ImagePicker
         option.mark_as_selected()
       else
         option.unmark_as_selected()
+    jQuery("li", @picker).each () ->
+      if jQuery(this).hasClass("selected") && jQuery("li", @picker).find(":focus").length == 0
+        jQuery(this).prop("tabindex", "0");
+      else
+        jQuery(this).prop("tabindex", "-1");
+      return
+    if jQuery(this).find(":selected").length == 0 && jQuery("li", @picker).find(":focus").length == 0
+      $("li:first-child", @picker).find(".selectable").prop("tabindex", "0");
+    return
+
 
   create_picker: () ->
     @picker         =  jQuery("<ul class='thumbnails image_picker_selector'></ul>")
@@ -199,6 +209,21 @@ class ImagePickerOption
     @opts.clicked.call(@picker.select, this, event)  if @opts.clicked?
     @opts.selected.call(@picker.select, this, event) if @opts.selected? and @is_selected()
 
+  key_down: (node, thumbnail) =>
+    return (event) =>
+      if event.which == 0 || event.which == 32 || event.which == 13
+        event.preventDefault()
+        thumbnail.click()
+      else if event.which == 37 || event.which == 38
+        event.preventDefault();
+        node.prev().find(".thumbnail>img").prop("tabindex", "0");
+        node.prev().find(".thumbnail>img").focus();
+      else if event.which == 39 || event.which == 40
+        event.preventDefault();
+        node.next().find(".thumbnail>img").prop("tabindex", "0");
+        node.next().find(".thumbnail>img").focus();
+      return
+
   create_node: () ->
     @node = jQuery("<li/>")
     # font-awesome support
@@ -206,7 +231,7 @@ class ImagePickerOption
       image = jQuery("<i>")
       image.attr("class", "fa-fw " + this.option.data("img-src"))
     else
-      image = jQuery("<img class='image_picker_image'/>")
+      image = jQuery("<img class='image_picker_image' tabindex='0'/>")
       image.attr("src", @option.data("img-src"))
     thumbnail = jQuery("<div class='thumbnail'>")
     # Add custom class
@@ -219,7 +244,33 @@ class ImagePickerOption
     imgAlt = @option.data("img-alt")
     if imgAlt
       image.attr('alt', imgAlt);
-    thumbnail.on("click", @clicked)  
+    thumbnail.on("click", @clicked)
+    thumbnail.on("keydown", @key_down(@node, thumbnail))
+    thumbnail.on("focusout", (event) ->
+      exitingCtrl = !$(this).siblings().is($(event.relatedTarget).closest("li"));
+      $(this).closest("ul").find(".thumbnail").each () ->
+        if $(this).hasClass("selected") && exitingCtrl
+          $(this).prop("tabindex", "0");
+        else
+          $(this).prop("tabindex", "-1");
+        return
+      if $(this).closest("ul").find(".selected").length == 0 && exitingCtrl
+        $("li:first-child", $(this).closest("ul")).find(".thumbnail").prop("tabindex", "0");
+      return
+    )
+    thumbnail.on("focusin", () ->
+      $(this).closest("ul").find(".thumbnail").each () ->
+        $(this).prop("tabindex", "-1");
+        return
+      return
+    )
+    thumbnail.on("mousedown", (event) ->
+      event.preventDefault();
+      $(this).closest("ul").find(".thumbnail").each () ->
+        $(this).blur();
+        return
+      return
+    )
     thumbnail.append(image)
     thumbnail.append(jQuery("<p/>").html(@label())) if @opts.show_label
     @node.append( thumbnail )
