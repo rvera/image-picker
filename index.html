@@ -220,17 +220,22 @@
       You can specify the following options when calling image picker:
       <dl class="dl-horizontal">
         <dt>hide_select</dt>
-        <dd>Default: true.  Wheter the original select item should be hidden or not.</dd>
+        <dd>Default: true.  If the original select item should be hidden or not.</dd>
         <dt>show_label</dt>
         <dd>
           Default: false. If set to true, the text of each option will be added as
           a paragraph below each image.
         </dd>
-        <dt>limit</dt>
-        <dd>
+      <dt>limit</dt>
+      <dd>
           Default: undefined. If it's a select multiple and set to any value, it'll
           cap the selectable elements at that value.
-        </dd>
+      </dd>
+      <dt>auto_update</dt>
+      <dd>
+          Default: false. When true, any option elements removed or added to the select box will be kept in sync with
+          the image picker.
+      </dd>
       </dl>
 
       Additionally you can specify the following callbacks, all the callbacks have the scope
@@ -260,19 +265,20 @@
           Default: undefined. Specify a function to be called when an option has been selected.
           Receives the original select as the first argument, the image picker option as the second and the original event as the third argument.
         </dd>
-        <dt>limit_reached</dt>
-        <dd>
-          <code>function(select){...}</code> <br/>
-          Default: undefined. Specify a function to be called when the limit cap has been reached.
-          Receives the original select as the first argument.
-        </dd>
+          <dt>limit_reached</dt>
+          <dd>
+              <code>function(select){...}</code> <br/>
+              Default: undefined. Specify a function to be called when the limit cap has been reached.
+              Receives the original select as the first argument.
+          </dd>
       </dl>
 
       Example:
       <pre class="prettyprint lang-html">
         $("select").imagepicker({
           hide_select : true,
-          show_label  : false
+          show_label  : false,
+          auto_update  : true
         })
       </pre>
     </p>
@@ -366,6 +372,55 @@
       </pre>
     </p>
 
+    <h4> Adding and Removing Options Dyanmically </h4>
+
+    <div class="picker">
+      <button onclick="addImage();" type="button">Add</button>
+      <button onclick="removeImage();" type="button">Remove</button>
+
+      <select class='image-picker auto_update show-html'>
+        <option data-img-src='img/01.png' data-img-alt="Page 1" value='1'>  Page 1  </option>
+        <option data-img-src='img/02.png' data-img-alt="Page 2"  value='2'>  Page 2  </option>
+        <option data-img-src='img/03.png' data-img-alt="Page 3"  value='3'>  Page 3  </option>
+        <option data-img-src='img/04.png' data-img-alt="Page 4"  value='4'>  Page 4  </option>
+        <option data-img-src='img/05.png' data-img-alt="Page 5"  value='5'>  Page 5  </option>
+      </select>
+    </div>
+
+    <p class="highlight">
+      To add and remove options dynamically, set the <code>auto_update</code> parameter to <code>true</code>. Then you
+      will be able to interact with the select box via javascript.
+
+      <pre class="prettyprint lang-javascript">
+        //Initialize the picker
+        $("select").imagepicker({
+          auto_update : true
+        });
+
+        //The values must be unique, so create a unique value for each element added
+        let val = 5;
+
+        //Called to add an image
+        function addImage(){
+	      val ++;
+
+	      let $option = $('&lt;option /&gt;', {
+			text: "An Image",
+			"data-img-src" : "http://via.placeholder.com/350x350",
+			"data-alt" : "Alt text",
+			value: val
+		  });
+
+	      $("#image-picker").append($option)
+        }
+
+        //Called to remove the first image
+        function removeImage(){
+	      $("option","#image-picker").first().remove();
+        }
+      </pre>
+    </p>
+
   </div>
 
   <script type="text/javascript">
@@ -384,12 +439,51 @@
       hide_select:    false
     });
 
+
+    jQuery("select.image-picker.auto_update").imagepicker({
+        auto_update:  true,
+    });
+
     var container = jQuery("select.image-picker.masonry").next("ul.thumbnails");
     container.imagesLoaded(function(){
       container.masonry({
         itemSelector:   "li",
       });
     });
+
+    var val = 5;
+    function addImage(){
+        if(val >= 12) {
+            alert("There are no more images to add!");
+            return;
+        }
+        val ++;
+
+        var $option = $('<option />', {
+            text: "An Image",
+            "data-img-src" : "img/" + pad(val, 2) + ".png",
+            "data-alt" : "Alt text",
+            value: val
+        });
+
+        $(".image-picker.auto_update").append($option)
+    }
+
+    function removeImage(){
+        if(val <= 0) {
+            alert("There are no images to remove!");
+            return;
+        }
+        val--;
+
+        $("option",".image-picker.auto_update").first().remove();
+    }
+
+    function pad(num, size) {
+        var s = num+"";
+        while (s.length < size) s = "0" + s;
+        return s;
+    }
 
   </script>
 
