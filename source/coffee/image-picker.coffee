@@ -13,6 +13,7 @@ jQuery.fn.extend({
 
 sanitized_options = (opts) ->
   default_options = {
+    auto_update:      false,
     hide_select:      true,
     show_label:       false,
     initialized:      undefined,
@@ -41,6 +42,8 @@ class ImagePicker
     @multiple       = @select.attr("multiple") == "multiple"
     @opts.limit     = parseInt(@select.data("limit")) if @select.data("limit")?
     @build_and_append_picker()
+    if @opts.auto_update
+      @setup_data_bind()
 
   destroy: ->
     for option in @picker_options
@@ -57,6 +60,18 @@ class ImagePicker
     @create_picker()
     @select.after(@picker)
     @sync_picker_with_select()
+
+  setup_data_bind: () ->
+    context = this;
+    observer = new MutationObserver (mutations) ->
+      mutations.forEach (mutation) ->
+        for option in mutation.addedNodes
+          context.add_option(option.index, option)
+        for option in mutation.removedNodes
+          context.remove_option(option)
+      true
+    observer.observe(jQuery(@select).get(0), { childList: true, subtree: true });
+    return
 
   sync_picker_with_select: () =>
     for option in @picker_options
@@ -80,6 +95,31 @@ class ImagePicker
     @picker_options = []
     @recursively_parse_option_groups(@select, @picker)
     @picker
+
+  add_option: (index, option) ->
+    container = @picker
+    optGroup = jQuery(option).parent("optgroup")
+    if optGroup.length>0
+      groupIndex = jQuery("optgroup", @select).index(optGroup)
+      container = jQuery(".group", @picker).eq(groupIndex).first("ul")
+    option = new ImagePickerOption option, this, @opts
+    option.unmark_as_selected()
+    return if !option.has_image()
+    if @picker_options.length==index
+      container.append(option.node)
+    else
+      container.children().eq(index).before(option.node)
+    @picker_options.splice index, 0, option
+    return
+
+  remove_option: (option) ->
+    return if @picker_options.length==0
+    val = jQuery(option).val()
+    for i in [@picker_options.length-1..0]
+      if @picker_options[i].value() == val
+        @picker_options[i].node.remove()
+        @picker_options.splice(i, 1);
+        @select.change()
 
   recursively_parse_option_groups: (scoped_dom, target_container) ->
     for option_group in scoped_dom.children("optgroup")

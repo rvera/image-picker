@@ -36,6 +36,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   sanitized_options = function sanitized_options(opts) {
     var default_options;
     default_options = {
+      auto_update: false,
       hide_select: true,
       show_label: false,
       initialized: void 0,
@@ -81,6 +82,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.opts.limit = parseInt(this.select.data("limit"));
       }
       this.build_and_append_picker();
+      if (this.opts.auto_update) {
+        this.setup_data_bind();
+      }
     }
 
     _createClass(ImagePicker, [{
@@ -110,6 +114,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.create_picker();
         this.select.after(this.picker);
         return this.sync_picker_with_select();
+      }
+    }, {
+      key: "setup_data_bind",
+      value: function setup_data_bind() {
+        var context, observer;
+        context = this;
+        observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            var j, k, len, len1, option, ref, ref1, results;
+            ref = mutation.addedNodes;
+            for (j = 0, len = ref.length; j < len; j++) {
+              option = ref[j];
+              context.add_option(option.index, option);
+            }
+            ref1 = mutation.removedNodes;
+            results = [];
+            for (k = 0, len1 = ref1.length; k < len1; k++) {
+              option = ref1[k];
+              results.push(context.remove_option(option));
+            }
+            return results;
+          });
+          return true;
+        });
+        observer.observe(jQuery(this.select).get(0), {
+          childList: true,
+          subtree: true
+        });
       }
     }, {
       key: "sync_picker_with_select",
@@ -142,6 +174,48 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.picker_options = [];
         this.recursively_parse_option_groups(this.select, this.picker);
         return this.picker;
+      }
+    }, {
+      key: "add_option",
+      value: function add_option(index, option) {
+        var container, groupIndex, optGroup;
+        container = this.picker;
+        optGroup = jQuery(option).parent("optgroup");
+        if (optGroup.length > 0) {
+          groupIndex = jQuery("optgroup", this.select).index(optGroup);
+          container = jQuery(".group", this.picker).eq(groupIndex).first("ul");
+        }
+        option = new ImagePickerOption(option, this, this.opts);
+        option.unmark_as_selected();
+        if (!option.has_image()) {
+          return;
+        }
+        if (this.picker_options.length === index) {
+          container.append(option.node);
+        } else {
+          container.children().eq(index).before(option.node);
+        }
+        this.picker_options.splice(index, 0, option);
+      }
+    }, {
+      key: "remove_option",
+      value: function remove_option(option) {
+        var i, j, ref, results, val;
+        if (this.picker_options.length === 0) {
+          return;
+        }
+        val = jQuery(option).val();
+        results = [];
+        for (i = j = ref = this.picker_options.length - 1; ref <= 0 ? j <= 0 : j >= 0; i = ref <= 0 ? ++j : --j) {
+          if (this.picker_options[i].value() === val) {
+            this.picker_options[i].node.remove();
+            this.picker_options.splice(i, 1);
+            results.push(this.select.change());
+          } else {
+            results.push(void 0);
+          }
+        }
+        return results;
       }
     }, {
       key: "recursively_parse_option_groups",
