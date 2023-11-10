@@ -8,7 +8,7 @@ Just download the latest build and add the corresponding .js and .css to your as
 
 # Examples and doc
 
-Visit http://rvera.github.com/image-picker
+Visit http://rvera.github.io/image-picker
 
 # What's new
 
